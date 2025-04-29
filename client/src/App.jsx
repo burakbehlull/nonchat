@@ -1,10 +1,10 @@
+import Layout from "./pages/Layout"
 
 function App() {
-
   return (
-    <>
-      HELLO WORLD
-    </>
+	<>
+		<Layout />
+	</>
   )
 }
 

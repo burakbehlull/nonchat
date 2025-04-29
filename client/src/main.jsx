@@ -1,15 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { Provider } from "@/components/ui/provider.jsx"
+import { StrictMode } from "react"
+import { createRoot } from "react-dom/client"
 
 import { BrowserRouter } from 'react-router-dom'
 import Routes from './routes/index'
 
-import "./main.css"
+import App from "./App.jsx"
 
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-      <BrowserRouter>
-          <Routes />
-      </BrowserRouter>
-  </React.StrictMode>,
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Provider>
+	  <BrowserRouter>
+		<App />
+	  </BrowserRouter>
+    </Provider>
+  </StrictMode>,
 )
