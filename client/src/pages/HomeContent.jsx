@@ -37,6 +37,7 @@ export default function HomeContent(){
                 flexDirection="column"
                 textAlign="center"
             >
+                 
                 <Stack spacing={4} maxW="2xl" width="100%">
                     <Heading size="4xl" letterSpacing="tight">
                         <Highlight query="talk anonymously" styles={{ color: "teal.600" }}>
@@ -54,7 +55,9 @@ export default function HomeContent(){
                                 placeholder="Kod giriniz" 
                                 size="lg" 
                                 width="100%"
+                                aria-label="Kod giriniz"
                             />
+                            <Button variant="subtle">Katıl</Button>
                             <ButtonCheck mt={4} />
                         </Stack>
                     ) : (
@@ -64,7 +67,9 @@ export default function HomeContent(){
                                 placeholder="Kod giriniz" 
                                 size="lg" 
                                 flex="1"
+                                aria-label="Kod giriniz"
                             />
+                            <Button variant="subtle" size="lg">Katıl</Button>
                         </Box>
                     )}
                 </Stack>
