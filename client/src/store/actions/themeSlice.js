@@ -1,19 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const keepSlice = createSlice({
-    name: 'keep',
+export const themeSlice = createSlice({
+    name: 'theme',
     initialState: {
-        userData: null
+        value: 'light'
     },
     reducers: {
-        setUserData: (state, action) => {
-            state.userData = action.payload
+        setStoreTheme: (state, action) => {
+			console.log("redux", action.payload)
+            state.value = action.payload
         },
-        getUserData: (state) => {
-			return state.userData ? state.userData : null
+        getStoreTheme: (state) => {
+			console.log("state", state.value)
+			return state?.value
 		}
     }
 })
 
-export const { setUserData, getUserData } = keepSlice.actions
-export default keepSlice.reducer
+export const { setStoreTheme, getStoreTheme } = themeSlice.actions
+export default themeSlice.reducer
