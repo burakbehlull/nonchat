@@ -1,10 +1,11 @@
-
+import { Layout } from "@pages"
+import { useStore } from "@hooks"
 function App() {
 
   return (
-    <>
-      HELLO WORLD
-    </>
+	<>
+		<Layout />
+	</>
   )
 }
 
