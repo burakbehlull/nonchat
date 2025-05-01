@@ -1,5 +1,6 @@
 const http = require('http');
 const { Server } = require('socket.io');
+const eventLoader = require('./events/eventLoader.js');
 
 const server = http.createServer();
 
@@ -9,6 +10,8 @@ const io = new Server(server, {
     methods: ['GET', 'POST']
   }
 });
+
+eventLoader(io);
 
 io.on('connection', (socket) => {
   console.log(`New connection: ${socket.id}`);
