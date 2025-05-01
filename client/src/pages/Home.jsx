@@ -8,11 +8,15 @@ function Home() {
 		<Flex direction="column" height="100vh">
 			<Box
 				height="10vh"
-				bg="teal.500"
 				color="white"
 				display="flex"
 				alignItems="center"
 				justifyContent="center"
+				px={{
+					base: 4,
+					md: 8,
+					lg: 16,
+				}}
 			>
 				<Navbar />
 			</Box>
