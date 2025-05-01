@@ -10,6 +10,7 @@ export default function HomeContent(){
             <Button 
                 size="lg"
                 variant="solid"
+				//1e293b
                 bg="#2563eb"
                 color="white"
                 _hover={{ bg: '#1e40af' }}
