@@ -26,6 +26,8 @@ function Home() {
 				flex="1"
 				p={4}
 				overflowY="auto"
+				bg={{base: "red", _dark: "black"}}
+				className="dark"
 			>
 				<HomeContent />
 			</Box>

@@ -12,7 +12,7 @@ export default function DiscordStyleNavbar() {
     >
       
       <Text fontSize="xl" fontWeight="bold" color="black">
-        NonChat
+        NoneChat
       </Text>
 
       {/* <Link href="#" _hover={{ textDecoration: "underline" }}>None</Link> */}
