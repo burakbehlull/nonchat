@@ -1,7 +1,6 @@
-import { Button } from './Button'
+import Input from './Input'
 
-
-export {
-    Button as ButtonUI,
-
+export { 
+    Input as InputUI,
+    
 }
