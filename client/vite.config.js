@@ -19,6 +19,7 @@ export default defineConfig({
       '@pages': way('src/pages/index'),
       '@components': way('src/components/index'),
 	  '@hooks': way('src/hooks/index'),
+	  '@helpers': way('src/helpers'),
       '@ui': way('src/components/ui/index'),
     }
   },

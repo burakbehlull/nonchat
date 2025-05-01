@@ -7,11 +7,10 @@ export const themeSlice = createSlice({
     },
     reducers: {
         setStoreTheme: (state, action) => {
-			console.log("redux", action.payload)
+			localStorage.setItem("theme", action.payload)
             state.value = action.payload
         },
         getStoreTheme: (state) => {
-			console.log("state", state.value)
 			return state?.value
 		}
     }

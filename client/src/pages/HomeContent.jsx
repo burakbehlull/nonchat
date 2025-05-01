@@ -17,9 +17,9 @@ export default function HomeContent(){
                 _focus={{ bg: 'outline' }}
                 rounded="lg"
                 transition="background-color 0.2s ease-in-out"
-                shadow="md"
-                minWidth="15rem" // Minimum genişlik belirliyoruz
-                width={isMobile ? "100%" : "auto"} // Mobilde tam genişlik, masaüstünde otomatik
+                
+                minWidth="15rem" 
+                width={isMobile ? "100%" : "auto"}
                 {...props}
             >
                 <HiChatAlt2 />
