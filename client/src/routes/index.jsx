@@ -1,5 +1,8 @@
 import { useRoutes } from 'react-router-dom'
 import { Home, BaseChannel } from '@pages'
+import { NotFound } from '@http'
+
+
 export default function Routes(){
 
     return useRoutes([
@@ -10,6 +13,10 @@ export default function Routes(){
         {
             path: '/channel/:channelId',
             element: <BaseChannel />,
+        },
+        {
+            path: '*',
+            element: <NotFound />
         }
     ])
 

@@ -20,7 +20,8 @@ export default defineConfig({
       '@components': way('src/components/index'),
       '@hooks': way('src/hooks/index'),
       '@helpers': way('src/helpers'),
-      '@services': way('src/services/SocketService'),
+      '@services': way('src/services/index'),
+      '@http': way('src/components/http/index'),
       '@ui': way('src/components/ui/index'),
     }
   },
