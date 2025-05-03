@@ -10,6 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
+    "axios": "^1.7.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.25.1"
+=======
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^3.16.1",
     "@emotion/react": "^11.14.0",
@@ -23,6 +29,7 @@
     "react-icons": "^5.5.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.5.3"
+>>>>>>> df72b1275e8c378b4cdb4800c903344aebf3a40a
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

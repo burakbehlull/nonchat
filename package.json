@@ -14,6 +14,7 @@
   "author": "Burak <@burakbehlull>",
   "license": "MIT",
   "dependencies": {
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "socket.io-client": "^4.8.1"
   }
 }
