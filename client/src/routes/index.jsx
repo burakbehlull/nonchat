@@ -1,5 +1,5 @@
 import { useRoutes } from 'react-router-dom'
-import { Home } from '@pages'
+import { Home, BaseChannel } from '@pages'
 export default function Routes(){
 
     return useRoutes([
@@ -7,6 +7,10 @@ export default function Routes(){
             path: '/',
             element: <Home />,
         },
+        {
+            path: '/channel/:channelId',
+            element: <BaseChannel />,
+        }
     ])
 
 }
