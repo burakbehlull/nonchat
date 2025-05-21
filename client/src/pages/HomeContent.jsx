@@ -1,4 +1,4 @@
-import { Box, Button, Center, Heading, Stack, Highlight, Text, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, Stack, Highlight, Text, useBreakpointValue, Kbd } from "@chakra-ui/react";
 import { HiChatAlt2 } from "react-icons/hi";
 import { InputUI } from "@ui";
 
@@ -56,6 +56,7 @@ export default function HomeContent(){
                                 placeholder="Kod giriniz" 
                                 size="lg" 
                                 width="100%"
+								endElement={<Kbd>⌘K</Kbd>}
                                 aria-label="Kod giriniz"
                             />
                             <Button variant="subtle">Katıl</Button>
@@ -65,6 +66,7 @@ export default function HomeContent(){
                         <Box display="flex" gap={4} width="100%" alignItems="center">
                             <ButtonCheck size="lg" /> 
                             <InputUI 
+								endElement={<Kbd>⌘K</Kbd>}
                                 placeholder="Kod giriniz" 
                                 size="lg" 
                                 flex="1"
