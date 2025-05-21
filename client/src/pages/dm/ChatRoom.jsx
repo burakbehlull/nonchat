@@ -1,6 +1,5 @@
 import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
-import { InputUI, Bubble } from "@ui";
-import NoneUser from '@assets/none-user.jpg'
+import { InputUI, Bubble, Members } from "@ui";
 
 export default function ChatRoom(){
 	const users = [
@@ -22,24 +21,24 @@ export default function ChatRoom(){
 	const flexDirection = useBreakpointValue({ base: "column", md: "row" });
 
     return (
-	<Flex height="100vh" direction={{ base: "column", md: "row" }}>
+	<Flex height="95vh" direction={{ base: "column", md: "row" }}>
       <Flex
         direction="column"
         width={{ base: "100%", md: "300px" }}
-        borderRight="1px solid black"
-        height={{ base: "auto", md: "100vh" }}
+        borderRight="1px solid gray"
+        height={{ base: "auto", md: "95vh" }}
       >
-        <Box borderBottom="1px solid black" p={4}>
+        <Box borderBottom="1px solid gray" p={4}>
           ODA AYARLARI
         </Box>
         <Box flex="1" p={4}>
-          KATILIMCILAR
+          <Members data={users} />
         </Box>
       </Flex>
 
       
       <Flex direction="column" flex="1" height="95vh">
-        <Box borderBottom="1px solid black" p={4}>
+        <Box borderBottom="1px solid gray" p={4}>
           ODA ADI
         </Box>
 		
