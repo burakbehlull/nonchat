@@ -3,7 +3,7 @@ import NoneUser from '@assets/none-user.jpg'
 
 const Bubble = ({data}) => {
   return (
-    <Stack gap="8">
+    <Stack gap="6">
       {data.map((user) => (
         <HStack key={user?.id} gap="4">
           <Avatar.Root size="xl">

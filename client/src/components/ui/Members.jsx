@@ -7,7 +7,7 @@ const Members = ({data}) => {
     <Stack gap="5">
       {data.map((user) => (
         <HStack key={user?.id} gap="3">
-          <Avatar.Root size="xl">
+          <Avatar.Root size="lg">
             <Avatar.Fallback name={user.name} /> 
             <Avatar.Image src={NoneUser} />
           </Avatar.Root>

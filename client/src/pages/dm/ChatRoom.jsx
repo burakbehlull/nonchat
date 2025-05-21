@@ -1,4 +1,4 @@
-import { Box, Flex, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex, useBreakpointValue, Text } from "@chakra-ui/react";
 import { InputUI, Bubble, Members } from "@ui";
 
 export default function ChatRoom(){
@@ -32,6 +32,9 @@ export default function ChatRoom(){
           ODA AYARLARI
         </Box>
         <Box flex="1" p={4}>
+		  <Text fontWeight="medium" 
+			textStyle="md"
+			mb={4}>Kullanıcılar</Text>
           <Members data={users} />
         </Box>
       </Flex>
@@ -39,7 +42,9 @@ export default function ChatRoom(){
       
       <Flex direction="column" flex="1" height="95vh">
         <Box borderBottom="1px solid gray" p={4}>
-          ODA ADI
+           <Text truncate>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+			</Text>
         </Box>
 		
         <Flex
