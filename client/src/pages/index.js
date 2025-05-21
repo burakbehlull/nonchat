@@ -1,14 +1,22 @@
 import Layout from "./Layout"
+
+// pages
 import Home from "./Home"
 import HomeContent from "./HomeContent"
-import BaseChannel from "./BaseChannel"
+
+// dm area
+import BaseChannel from "./dm/BaseChannel"
+import ChatRoom from "./dm/ChatRoom"
 
 export {
 	Layout,
 	// pages
 	Home,
 	HomeContent,
+	
+	// dm components
 	BaseChannel,
+	ChatRoom
 	
 
 }
