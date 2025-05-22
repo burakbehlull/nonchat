@@ -6,7 +6,8 @@ function Layout() {
 	
   return (
 	<Container
-		padding="15px"
+		padding={0}
+		margin={0}
 		minH="100vh"
 		maxW="100vw"
 	>

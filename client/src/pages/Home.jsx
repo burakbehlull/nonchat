@@ -5,7 +5,7 @@ import { HomeContent } from "@pages"
 function Home() {
   return (
 	<>
-		<Flex direction="column" height="100vh">
+		<Flex direction="column" height="100vh" padding="15px">
 			<Box
 				height="10vh"
 				color="white"
