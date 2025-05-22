@@ -1,6 +1,6 @@
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
-import { InputUI, Bubble, Members } from "@ui";
-import { useEffectc } from "react";
+import { InputUI, Bubble, Members, DrawerUI } from "@ui";
+import { useEffect } from "react";
 
 export default function ChatRoom() {
 	const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
@@ -29,16 +29,15 @@ export default function ChatRoom() {
         height="100vh"
         overflow="hidden"
       >
-	  {isMobile ? (<p>1</p>) : (<p>2</p>)}
-
-      <Flex
+	  
+		{isMobile ?(<></>) : (<Flex
           direction="column"
           width={{ base: "100%", md: "290px" }}
           height={{ base: "auto", md: "100vh" }}
           borderRight={{ base: "none", md: "1px solid #e4e4e7" }}
           borderBottom={{ base: "1px solid #e4e4e7", md: "none" }}
           flexShrink={0}
-        >
+		>
           <Box borderBottom="1px solid #e4e4e7" p={4}>
             ODA AYARLARI
           </Box>
@@ -48,7 +47,8 @@ export default function ChatRoom() {
             </Text>
             <Members data={users} />
           </Box>
-        </Flex>
+        </Flex>)}
+		
 
         <Flex
           direction="column"
@@ -57,6 +57,12 @@ export default function ChatRoom() {
         >
           <Box borderBottom="1px solid #e4e4e7" p={4}>
             <Text isTruncated>Lorem ipsum dolor sit amet.</Text>
+			{isMobile ? (
+				<DrawerUI title="Katılımcılar" buttonTitle="Katılımcılar">
+					<Members data={users} />
+				</DrawerUI>) : (<></>)
+			}
+			
           </Box>
 
           <Box flex="1" position="relative" overflow="hidden">
@@ -89,7 +95,6 @@ export default function ChatRoom() {
 			  }}
 			  
               bg="white"
-              // borderTop="1px solid gray"
             >
               <InputUI placeholder="Mesaj gönder" size="lg" borderRadius={15}
 				onKeyDown={(e)=> {
