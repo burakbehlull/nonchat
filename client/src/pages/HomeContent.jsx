@@ -1,5 +1,5 @@
 import { Box, Button, Center, Heading, Stack, Highlight, Text, useBreakpointValue, Kbd } from "@chakra-ui/react";
-import { HiChatAlt2 } from "react-icons/hi";
+import { HiChatAlt2 } from "@icons";
 import { InputUI } from "@ui";
 import { useNavigate } from "react-router-dom";
 

@@ -1,10 +1,10 @@
+import { useRef } from "react";
+
 import { Box, Flex, Text, useBreakpointValue, Icon } from "@chakra-ui/react";
 import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
-import { useRef } from "react";
-import { FaUsersGear } from "react-icons/fa6";
-import { FaUsers } from "react-icons/fa";
-import { HiUsers } from "react-icons/hi";
-import { HiOutlineUsers } from "react-icons/hi2";
+
+import { FaUsersGear, FaUsers, HiUsers, HiOutlineUsers } from "@icons";
+import { Darkmode } from "@components"
 
 export default function ChatRoom() {
   const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
@@ -30,7 +30,7 @@ export default function ChatRoom() {
 	  return (
 		<ModalUI 
 			modalTitle="Oda Ayarları"
-			content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsersGear /></Icon>}
+			content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"><FaUsersGear /></Icon>}
 			ref={ref}
 		>
 			<ModalInputUI
@@ -46,7 +46,7 @@ export default function ChatRoom() {
 					textStyle="md"
 				/>
 				<NumberInputUI 
-					icon={<Icon size="md" color="gray.800" cursor="pointer"><HiOutlineUsers /></Icon>} 
+					icon={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"><HiOutlineUsers /></Icon>} 
 					value={1}
 					min={0}
 				/>
@@ -69,13 +69,17 @@ export default function ChatRoom() {
           direction="column"
           width={{ base: "100%", md: "290px" }}
           height={{ base: "auto", md: "100vh" }}
-          borderRight={{ base: "none", md: "1px solid #e4e4e7" }}
-          borderBottom={{ base: "1px solid #e4e4e7", md: "none" }}
+          borderRight={{ base: "none", md: "1px solid #e4e4e7", _dark: "1px solid #18181b" }}
+          borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #18181b", md: "none" }}
           flexShrink={0}
 		>
-          <Box borderBottom="1px solid #e4e4e7" p="18px">
+          <Box borderBottom={{base: "1px solid #e4e4e7", _dark: "1px solid #18181b"}} p="18px">
 			<Flex gap={4} justify="space-between">
-				{isMobile ? null : <GroupSettings />}
+				{isMobile ? null : <>
+					<Darkmode size="md" />
+					<GroupSettings />
+				</>}
+				
 			</Flex>
           </Box>
           <Box flex="1" p={4} overflowY="auto">
@@ -90,15 +94,17 @@ export default function ChatRoom() {
           flex="1"
           height={{ base: "auto", md: "97vh" }}
         >
-          <Box borderBottom="1px solid #e4e4e7" p={4}>
+          <Box borderBottom={{base: "1px solid #e4e4e7", _dark: "1px solid #18181b"}} p={4}>
 			<Flex justify={isMobile ? "space-around" : "normal"}>
 				<TextUI text="Lorem ipsum dolor sit amet." isTruncated />
 				{isMobile && (
 					<Box display="flex" gap={4} mt={1}>
-						<DrawerUI title="Katılımcılar" content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsers /></Icon>}>
+						<DrawerUI title="Katılımcılar" content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"><FaUsers /></Icon>}>
 							<Members data={users} />
 						</DrawerUI>
 						<GroupSettings />
+						<Darkmode size="md" />
+						
 					</Box>
 					
 					)
@@ -136,9 +142,10 @@ export default function ChatRoom() {
 				  base: "4",md:"1", lg: "1"
 			  }}
 			  
-              bg="white"
+              color={{base: "black", _dark: "white"}}
             >
               <InputUI placeholder="Mesaj gönder" size="lg" borderRadius={15}
+				type="text"
 				onKeyDown={(e)=> {
 					if (e.key === 'Enter') {
 					  alert('Enter key was pressed!');

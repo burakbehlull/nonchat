@@ -1,13 +1,8 @@
-import { Flex, Text, Icon } from "@chakra-ui/react";
-import { useStore } from "@hooks"
-import { Fragment } from "react"
-import { MdDarkMode, MdLightMode } from "react-icons/md"
+import { Flex, Text } from "@chakra-ui/react";
+import { Darkmode } from "@components";
 
 export default function Navbar() {  
-  	const { setTheme, getTheme } = useStore()
-	const theme = getTheme()
-	const toggle = ()=> setTheme(theme=="light" ? "dark" : "light")
-	
+
   
   return (
     <Flex 
@@ -23,11 +18,7 @@ export default function Navbar() {
         NoneChat
       </Text>
 	  
-	   <Icon size="lg">
-			{theme === "light" ? <MdLightMode onClick={toggle} color="black" cursor="pointer" /> 
-			: <MdDarkMode onClick={toggle} color="white" cursor="pointer" />}
-	   </Icon>
-	   
+	   <Darkmode size="lg" />
 	  
       {/* <Link href="#" _hover={{ textDecoration: "underline" }}>None</Link> */}
       

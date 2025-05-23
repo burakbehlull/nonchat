@@ -1,5 +1,5 @@
 import { NumberInput, InputGroup } from "@chakra-ui/react"
-import { LuArrowRightLeft } from "react-icons/lu"
+import { LuArrowRightLeft } from "@icons"
 
 const NumberInputUI = ({value, icon, ...props}) => {
   return (

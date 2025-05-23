@@ -1,9 +1,12 @@
-import { Avatar, HStack, Stack, Text, Badge, Flex, Icon } from "@chakra-ui/react"
-import NoneUser from '@assets/none-user.jpg'
-import { HiAtSymbol, HiStar } from "react-icons/hi"
-import { BsThreeDotsVertical } from "react-icons/bs";
-import { TooltipMenu, TooltipMenuItem, ModalUI, ModalInputUI } from "@ui"
 import { useRef } from "react"
+
+import { Avatar, HStack, Stack, Text, Badge, Flex, Icon } from "@chakra-ui/react"
+
+import { HiAtSymbol, HiStar, BsThreeDotsVertical } from "@icons"
+import { TooltipMenu, TooltipMenuItem, ModalUI, ModalInputUI } from "@ui"
+
+import NoneUser from '@assets/none-user.jpg'
+
 
 const Members = ({data}) => {
   const usernameRef = useRef(null)
@@ -30,7 +33,7 @@ const Members = ({data}) => {
 					
 					
 				</Badge>
-				<TooltipMenu content={<Icon size="sm" color="gray.800" cursor="pointer" ml={1}><BsThreeDotsVertical /></Icon>}>
+				<TooltipMenu content={<Icon size="sm" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer" ml={1}><BsThreeDotsVertical /></Icon>}>
 					<TooltipMenuItem value="username-change" title="Kullanıcı Adını Değiştirir"
 						onClick={()=> usernameRef.current.click()}
 					>İsim Değiştir</TooltipMenuItem>

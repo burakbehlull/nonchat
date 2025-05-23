@@ -24,6 +24,7 @@ export default defineConfig({
       '@services': way('src/services/index'),
       '@http': way('src/components/http/index'),
       '@ui': way('src/components/ui/index'),
+      '@icons': way('src/components/Icons'),
     }
   },
 })
