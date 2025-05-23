@@ -1,6 +1,6 @@
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
 import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Icon } from "@chakra-ui/react";
 import { FaUsersGear } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
@@ -9,8 +9,8 @@ import { HiOutlineUsers } from "react-icons/hi2";
 
 
 export default function ChatRoom() {
-	const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
-	const ref = useRef(null)
+  const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
+  const ref = useRef(null)
   const users = [
     {
       id: "1",
