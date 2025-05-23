@@ -1,12 +1,10 @@
 import { Button, CloseButton, Drawer, Portal } from "@chakra-ui/react"
 
-const DrawerUI = ({buttonTitle, buttonSize, title, children, closeButtonSize, footer}) => {
+const DrawerUI = ({content, buttonSize, title, children, closeButtonSize, footer}) => {
   return (
     <Drawer.Root placement="start">
       <Drawer.Trigger asChild>
-        <Button variant="outline" size={buttonSize ?? "sm"}>
-			{buttonTitle}
-        </Button>
+		{content}
       </Drawer.Trigger>
       <Portal>
         <Drawer.Backdrop />

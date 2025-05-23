@@ -1,6 +1,10 @@
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
-import { InputUI, Bubble, Members, DrawerUI } from "@ui";
+import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI } from "@ui";
 import { useEffect } from "react";
+import { Icon } from "@chakra-ui/react";
+import { FaUsersGear } from "react-icons/fa6";
+import { FaUsers } from "react-icons/fa";
+
 
 export default function ChatRoom() {
 	const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
@@ -21,6 +25,20 @@ export default function ChatRoom() {
       content: "naber"
     }
   ];
+  
+  const GroupSettings = ()=> {
+	  return (
+		<ModalUI 
+			modalTitle="Oda Ayarları"
+			content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsersGear /></Icon>}
+		>
+			<ModalInputUI
+				placeholder="Grup Başlığı"
+				label="Grup Başlığı"
+			/>
+		</ModalUI>
+	  )
+  }
 
   return (
     <Box p={0}>
@@ -29,7 +47,8 @@ export default function ChatRoom() {
         height="100vh"
         overflow="hidden"
       >
-	  
+		
+			
 		{isMobile ?(<></>) : (<Flex
           direction="column"
           width={{ base: "100%", md: "290px" }}
@@ -38,8 +57,10 @@ export default function ChatRoom() {
           borderBottom={{ base: "1px solid #e4e4e7", md: "none" }}
           flexShrink={0}
 		>
-          <Box borderBottom="1px solid #e4e4e7" p={4}>
-            ODA AYARLARI
+          <Box borderBottom="1px solid #e4e4e7" p="18px">
+			<Flex gap={4} justify="space-between">
+				{isMobile ? null : <GroupSettings />}
+			</Flex>
           </Box>
           <Box flex="1" p={4} overflowY="auto">
             <Text fontWeight="medium" textStyle="md" mb={4}>
@@ -56,13 +77,20 @@ export default function ChatRoom() {
           height={{ base: "auto", md: "97vh" }}
         >
           <Box borderBottom="1px solid #e4e4e7" p={4}>
-            <Text isTruncated>Lorem ipsum dolor sit amet.</Text>
-			{isMobile ? (
-				<DrawerUI title="Katılımcılar" buttonTitle="Katılımcılar">
-					<Members data={users} />
-				</DrawerUI>) : (<></>)
-			}
-			
+			<Flex justify={isMobile ? "space-around" : "normal"}>
+				<Text isTruncated>Lorem ipsum dolor sit amet.</Text>
+				
+				{isMobile && (
+					<Box display="flex" gap={4} mt={1}>
+						<DrawerUI title="Katılımcılar" content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsers /></Icon>}>
+							<Members data={users} />
+						</DrawerUI>
+						<GroupSettings />
+					</Box>
+					
+					)
+				}
+		    </Flex>
           </Box>
 
           <Box flex="1" position="relative" overflow="hidden">
