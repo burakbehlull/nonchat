@@ -1,0 +1,37 @@
+import { Button, Menu, Portal, Show } from "@chakra-ui/react"
+import { Tooltip } from "./tooltip"
+
+const TooltipMenu = ({content, children}) => {
+  return (
+    <Menu.Root>
+      <Menu.Trigger asChild>
+		{content ? content : <></>}
+      </Menu.Trigger>
+      <Portal>
+        <Menu.Positioner>
+          <Menu.Content>
+			{children ? children : <></>}
+          </Menu.Content>
+        </Menu.Positioner>
+      </Portal>
+    </Menu.Root>
+  )
+}
+
+const MenuItem = (props) => {
+  const { value, title, ...rest } = props
+  return (
+    <Show when={title} fallback={<Menu.Item value={value} {...rest} />}>
+      <Tooltip
+        ids={{ trigger: value }}
+        openDelay={200}
+        closeDelay={0}
+        positioning={{ placement: "right" }}
+        content={title}
+      >
+        <Menu.Item value={value} {...rest} />
+      </Tooltip>
+    </Show>
+  )
+}
+export { TooltipMenu, MenuItem as TooltipMenuItem}

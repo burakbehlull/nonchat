@@ -7,6 +7,7 @@ import Bubble from './Bubble'
 import Members from './Members'
 
 import TextUI from './Text'
+import { TooltipMenu, TooltipMenuItem } from './TooltipMenu'
 
 
 import DrawerUI from './Drawer'
@@ -26,5 +27,8 @@ export {
 	ModalUI,
 	ModalInputUI,
 	TextUI,
+	
+	TooltipMenu,
+	TooltipMenuItem
 	
 }

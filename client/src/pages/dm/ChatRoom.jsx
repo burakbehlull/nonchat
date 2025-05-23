@@ -7,6 +7,7 @@ import { FaUsers } from "react-icons/fa";
 import { HiUsers } from "react-icons/hi";
 import { HiOutlineUsers } from "react-icons/hi2";
 
+import { TooltipMenu, TooltipMenuItem } from "@ui"
 
 export default function ChatRoom() {
   const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
@@ -59,6 +60,7 @@ export default function ChatRoom() {
 
   return (
     <Box p={0}>
+	  
       <Flex
         direction={{ base: "column", md: "row" }}
         height="100vh"
@@ -123,6 +125,7 @@ export default function ChatRoom() {
                 .map((_, i) => (
                   <Bubble key={i} data={users} />
                 ))}
+				
             </Box>
 
             <Box
