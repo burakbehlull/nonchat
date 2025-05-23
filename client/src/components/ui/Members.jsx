@@ -1,8 +1,12 @@
-import { Avatar, HStack, Stack, Text, Badge } from "@chakra-ui/react"
+import { Avatar, HStack, Stack, Text, Badge, Flex, Icon } from "@chakra-ui/react"
 import NoneUser from '@assets/none-user.jpg'
 import { HiAtSymbol, HiStar } from "react-icons/hi"
+import { BsThreeDotsVertical } from "react-icons/bs";
+import { TooltipMenu, TooltipMenuItem, ModalUI, ModalInputUI } from "@ui"
+import { useRef } from "react"
 
 const Members = ({data}) => {
+  const usernameRef = useRef(null)
   return (
     <Stack gap="5">
       {data.map((user) => (
@@ -12,13 +16,35 @@ const Members = ({data}) => {
             <Avatar.Image src={NoneUser} />
           </Avatar.Root>
           <Stack gap="0">
-            <Text fontWeight="medium">{user.name}
+            <Flex 
+				fontWeight="medium"
+			    justifyContent="center"
+				alignItems="center" 
+			>{user.name}
+				
 				<Badge variant="solid" colorPalette="green" ml={2}>
 					<HiAtSymbol />
 					None
+					
+					
 				</Badge>
-			</Text>
+				<TooltipMenu content={<Icon size="sm" color="gray.800" cursor="pointer" ml={1}><BsThreeDotsVertical /></Icon>}>
+					<TooltipMenuItem value="username-change" title="Kullanıcı Adını Değiştirir"
+						onClick={()=> usernameRef.current.click()}
+					>İsim Değiştir</TooltipMenuItem>
+				</TooltipMenu>
+			</Flex>
           </Stack>
+		  
+		  <ModalUI
+			modalTitle="Adını Değiştir"
+			content={<p ref={usernameRef}>{null}</p>}
+		   >
+			<ModalInputUI
+				placeholder="Bir Kullanıcı Adı Giriniz."
+				label="Kullanıcı Adı"
+			/>	
+		  </ModalUI>
         </HStack>
       ))}
     </Stack>

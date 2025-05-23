@@ -3,7 +3,7 @@ import { Tooltip } from "./tooltip"
 
 const TooltipMenu = ({content, children}) => {
   return (
-    <Menu.Root>
+    <Menu.Root closeOnSelect={false}>
       <Menu.Trigger asChild>
 		{content ? content : <></>}
       </Menu.Trigger>
@@ -19,7 +19,7 @@ const TooltipMenu = ({content, children}) => {
 }
 
 const MenuItem = (props) => {
-  const { value, title, ...rest } = props
+  const { value, title, onClick, ...rest } = props
   return (
     <Show when={title} fallback={<Menu.Item value={value} {...rest} />}>
       <Tooltip
@@ -29,7 +29,7 @@ const MenuItem = (props) => {
         positioning={{ placement: "right" }}
         content={title}
       >
-        <Menu.Item value={value} {...rest} />
+        <Menu.Item onClick={onClick} value={value} {...rest} />
       </Tooltip>
     </Show>
   )
