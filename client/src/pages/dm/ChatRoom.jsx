@@ -1,14 +1,16 @@
 import { Box, Flex, Text, useBreakpointValue } from "@chakra-ui/react";
-import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI } from "@ui";
-import { useEffect } from "react";
+import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
+import { useEffect, useRef } from "react";
 import { Icon } from "@chakra-ui/react";
 import { FaUsersGear } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
+import { HiUsers } from "react-icons/hi";
+import { HiOutlineUsers } from "react-icons/hi2";
 
 
 export default function ChatRoom() {
 	const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
-	
+	const ref = useRef(null)
   const users = [
     {
       id: "1",
@@ -31,11 +33,26 @@ export default function ChatRoom() {
 		<ModalUI 
 			modalTitle="Oda Ayarları"
 			content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsersGear /></Icon>}
+			ref={ref}
 		>
 			<ModalInputUI
 				placeholder="Grup Başlığı"
 				label="Grup Başlığı"
+				ref={ref}
 			/>
+			<Flex gap={4} align="center">
+				<TextUI 
+					text="Limit" 
+					color="#09090B" 
+					fontWeight="medium"
+					textStyle="md"
+				/>
+				<NumberInputUI 
+					icon={<Icon size="md" color="gray.800" cursor="pointer"><HiOutlineUsers /></Icon>} 
+					value={1}
+					min={0}
+				/>
+			</Flex>
 		</ModalUI>
 	  )
   }
@@ -63,9 +80,7 @@ export default function ChatRoom() {
 			</Flex>
           </Box>
           <Box flex="1" p={4} overflowY="auto">
-            <Text fontWeight="medium" textStyle="md" mb={4}>
-              Kullanıcılar
-            </Text>
+            <TextUI text="Kullanıcılar" fontWeight="medium" textStyle="md" mb={4} />
             <Members data={users} />
           </Box>
         </Flex>)}
@@ -78,8 +93,7 @@ export default function ChatRoom() {
         >
           <Box borderBottom="1px solid #e4e4e7" p={4}>
 			<Flex justify={isMobile ? "space-around" : "normal"}>
-				<Text isTruncated>Lorem ipsum dolor sit amet.</Text>
-				
+				<TextUI text="Lorem ipsum dolor sit amet." isTruncated />
 				{isMobile && (
 					<Box display="flex" gap={4} mt={1}>
 						<DrawerUI title="Katılımcılar" content={<Icon size="md" color="gray.800" cursor="pointer"><FaUsers /></Icon>}>

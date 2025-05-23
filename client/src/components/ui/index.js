@@ -1,17 +1,30 @@
+import { Provider } from './provider'
+
 import Input from './Input'
+import NumberInputUI from './NumberInput'
+
 import Bubble from './Bubble'
 import Members from './Members'
+
+import TextUI from './Text'
+
+
 import DrawerUI from './Drawer'
-import { ModalUI, InputUI as ModalInputUI } from './Modal'
-import { Provider } from './provider'
+import { ModalUI, ModalInputUI } from './Modal'
+
 
 export { 
     Provider,
+	
     Input as InputUI,
+	NumberInputUI,
+	
 	Bubble,
 	Members,
-	DrawerUI,
 	
+	DrawerUI,
 	ModalUI,
-	ModalInputUI 
+	ModalInputUI,
+	TextUI,
+	
 }

@@ -3,7 +3,7 @@
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react"
 import { useRef } from "react"
 
-const ModalUI = ({modalTitle, children, content}) => {
+const ModalUI = ({modalTitle, children, content, ref}) => {
   
   return (
     <Dialog.Root initialFocusEl={() => ref.current} size="xs">
@@ -35,7 +35,7 @@ const ModalUI = ({modalTitle, children, content}) => {
   )
 }
 
-const InputUI = ({label, ...props}) => {
+const ModalInputUI = ({label, ...props}) => {
 	return (
 		<Field.Root>
 			<Field.Label>{label}</Field.Label>
@@ -46,5 +46,5 @@ const InputUI = ({label, ...props}) => {
 
 export {
 	ModalUI,
-	InputUI
+	ModalInputUI
 }

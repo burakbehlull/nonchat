@@ -1,10 +1,17 @@
 import { Box, Button, Center, Heading, Stack, Highlight, Text, useBreakpointValue, Kbd } from "@chakra-ui/react";
 import { HiChatAlt2 } from "react-icons/hi";
 import { InputUI } from "@ui";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeContent(){
+	
     const isMobile = useBreakpointValue({ base: true, md: false });
-
+	const navigate = useNavigate()
+	
+	function RoomNavigater(){
+		navigate(`/channel/2`)
+	}
+	
     const ButtonCheck = (props) => {
         return (
             <Button 
@@ -72,7 +79,7 @@ export default function HomeContent(){
                                 flex="1"
                                 aria-label="Kod giriniz"
                             />
-                            <Button variant="subtle" size="lg">Katıl</Button>
+                            <Button variant="subtle" size="lg" onClick={RoomNavigater}>Katıl</Button>
                         </Box>
                     )}
                 </Stack>
