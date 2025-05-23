@@ -3,12 +3,12 @@
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react"
 import { useRef } from "react"
 
-const ModalUI = ({modalTitle, children, content, ref}) => {
+const ModalUI = ({modalTitle, children, content, ref, clickRef}) => {
   
   return (
     <Dialog.Root initialFocusEl={() => ref.current} size="xs">
-      <Dialog.Trigger asChild>
-		{content}
+      <Dialog.Trigger ref={clickRef} asChild>
+		{content ? content : <p></p>}
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />

@@ -7,6 +7,8 @@ import { useRef } from "react"
 
 const Members = ({data}) => {
   const usernameRef = useRef(null)
+  const usernameInputRef = useRef(null)
+  
   return (
     <Stack gap="5">
       {data.map((user) => (
@@ -38,11 +40,14 @@ const Members = ({data}) => {
 		  
 		  <ModalUI
 			modalTitle="Adını Değiştir"
-			content={<p ref={usernameRef}>{null}</p>}
+			ref={usernameInputRef}
+			clickRef={usernameRef}
 		   >
 			<ModalInputUI
 				placeholder="Bir Kullanıcı Adı Giriniz."
 				label="Kullanıcı Adı"
+				ref={usernameInputRef}
+				
 			/>	
 		  </ModalUI>
         </HStack>
