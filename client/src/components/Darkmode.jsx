@@ -9,9 +9,9 @@ export default function Darkmode({size, ...props}) {
 	
   
   return (
-	   <Icon size={size} {...props}>
-			{theme === "light" ? <MdLightMode onClick={toggle} color="black" cursor="pointer" /> 
-			: <MdDarkMode onClick={toggle} color="white" cursor="pointer" />}
-	   </Icon>
+		<Icon size={size} {...props}>
+			{theme === "light" ? <MdLightMode onClick={toggle} color="black" cursor="pointer" aria-label="Karanlık Tema" /> 
+			: <MdDarkMode onClick={toggle} color="white" cursor="pointer" aria-label="Aydınlık Tema" />}
+		</Icon>
   );
 }

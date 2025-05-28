@@ -1,6 +1,7 @@
 import { MdDarkMode, MdLightMode } from "react-icons/md"
 import { FaUsersGear } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
+import { FiSend } from "react-icons/fi";
 
 import { HiChatAlt2, HiUsers, HiAtSymbol, HiStar } from "react-icons/hi";
 import { HiOutlineUsers } from "react-icons/hi2";
@@ -23,6 +24,9 @@ export {
 	
 	FaUsersGear,
 	FaUsers,
+	
+	FiSend,
+
 	HiUsers,
 	HiOutlineUsers,
 	
