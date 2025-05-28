@@ -1,14 +1,12 @@
 "use client"
 
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react"
-import { useRef } from "react"
 
-const ModalUI = ({modalTitle, children, content, ref, clickRef}) => {
-  
+const ModalUI = ({modalTitle, children, content, dialogRef, clickRef, onClick}) => {
   return (
-    <Dialog.Root initialFocusEl={() => ref.current} size="xs">
+    <Dialog.Root initialFocusEl={() => dialogRef?.current} size="xs" >
       <Dialog.Trigger ref={clickRef} asChild>
-		{content ? content : <p></p>}
+		      {content ? content : <p></p>}
       </Dialog.Trigger>
       <Portal>
         <Dialog.Backdrop />
@@ -19,14 +17,14 @@ const ModalUI = ({modalTitle, children, content, ref, clickRef}) => {
             </Dialog.Header>
             <Dialog.Body pb="4">
               <Stack gap="4">
-			  {children}
+			          {children}
               </Stack>
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
                 <Button variant="outline">Kapat</Button>
               </Dialog.ActionTrigger>
-              <Button>Kaydet</Button>
+              <Button onClick={onClick}>Kaydet</Button>
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>

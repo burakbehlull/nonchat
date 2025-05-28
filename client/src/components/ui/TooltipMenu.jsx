@@ -1,16 +1,16 @@
-import { Button, Menu, Portal, Show } from "@chakra-ui/react"
+import { Menu, Portal, Show } from "@chakra-ui/react"
 import { Tooltip } from "./tooltip"
 
 const TooltipMenu = ({content, children}) => {
   return (
-    <Menu.Root closeOnSelect={false}>
+    <Menu.Root closeOnSelect={false} blurOnSelect={false}>
       <Menu.Trigger asChild>
-		{content ? content : <></>}
+		      {content ? content : <></>}
       </Menu.Trigger>
       <Portal>
         <Menu.Positioner>
-          <Menu.Content>
-			{children ? children : <></>}
+          <Menu.Content usePortal zIndex={9999}>
+			      {children ? children : <></>}
           </Menu.Content>
         </Menu.Positioner>
       </Portal>
@@ -25,7 +25,7 @@ const MenuItem = (props) => {
       <Tooltip
         ids={{ trigger: value }}
         openDelay={200}
-        closeDelay={0}
+        closeDelay={999999}
         positioning={{ placement: "right" }}
         content={title}
       >

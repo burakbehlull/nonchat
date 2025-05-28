@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
 import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
@@ -12,19 +12,27 @@ import { users } from "../../tests/data";
 export default function ChatRoom() {
   const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
   const ref = useRef(null)
+  const dialogRef = useRef(null)
   
+  const [veri, setVeri] = useState('');
+  const handleChange = (e)=> setVeri(e.target.value); 
   
   const GroupSettings = ()=> {
 	  return (
 		<ModalUI 
 			modalTitle="Oda Ayarları"
 			content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer" aria-label="Oda Ayarları"><FaUsersGear /></Icon>}
-			ref={ref}
+			dialogRef={dialogRef}
+      onClick={()=> alert(veri)}
 		>
 			<ModalInputUI
 				placeholder="Grup Başlığı"
 				label="Grup Başlığı"
 				ref={ref}
+        value={veri}
+        onChange={handleChange}
+        
+        type="text"
 			/>
 			<Flex gap={4} align="center">
 				<TextUI 

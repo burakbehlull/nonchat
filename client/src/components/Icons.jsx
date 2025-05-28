@@ -9,15 +9,21 @@ import { HiOutlineUsers } from "react-icons/hi2";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { LuArrowRightLeft } from "react-icons/lu"
 
-function IconUI({children}){
+import { Icon } from "@chakra-ui/react";
+
+function IconUI({children, color, size,  ...props}) {
 	return (
-		<Icon size="sm" 
-			color={{ base: "gray.800", _dark: "gray.100" }}
+		<Icon 
+			size={size || "sm"}
+			color={color || { base: "gray.800", _dark: "gray.100" }}
+			{...props}
 		>{children}</Icon>
 	)
 }
 
 export {
+	IconUI,
+
 	HiChatAlt2,
 	MdDarkMode,
 	MdLightMode,
