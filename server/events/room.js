@@ -6,12 +6,12 @@ export default (io, socket) => {
   socket.on('createRoom', ({ name, password, limit }, callback) => {
     const roomId = nanoid(8);
     rooms[roomId] = {
-      name,
+      name: name,
       password: password || null,
       limit: limit || 10,
       ownerId: socket.id,
       members: {},
-      banned: []
+      banned: [],
     };
 
     rooms[roomId].members[socket.id] = 'Nobody';
@@ -35,16 +35,17 @@ export default (io, socket) => {
   });
 
   socket.on('getRoomInfo', ({ roomId }, callback) => {
-	  const room = rooms[roomId];
-	  if (!room) return callback({ success: false, message: 'Room not found.' });
-
-	  const isOwner = socket.id === room.ownerId;
-	  callback({
-		success: true,
-		isOwner,
-		passwordProtected: !!room.password,
-	  });
-	});
+    const room = rooms[roomId];
+    if (!room) return callback({ success: false, message: 'Room not found.' });
+    const isOwner = socket.id === room.ownerId;
+    callback({
+      success: true,
+      isOwner,
+	  name: room.name,
+	  limit: room.limit,
+      passwordProtected: !!room.password,
+    });
+  });
 
   socket.on('changeName', ({ roomId, newName }) => {
     const room = rooms[roomId];
@@ -75,10 +76,32 @@ export default (io, socket) => {
     io.to(roomId).emit('roomUsers', getUsers(roomId));
   });
 
+  socket.on('sendMessage', ({ roomId, message }, callback) => {
+    const room = rooms[roomId];
+    if (!room) return;
+
+    const name = room.members[socket.id] || "Anonim";
+
+    const msg = {
+      id: nanoid(6),
+      from: socket.id,
+      name,
+      content: message,
+      timestamp: new Date().toISOString()
+    };
+
+    io.to(roomId).emit('receiveMessage', msg);
+    if (callback) callback({ success: true });
+  });
+
   function getUsers(roomId) {
     const room = rooms[roomId];
     if (!room) return [];
-    return Object.entries(room.members).map(([id, name]) => ({ id, name, role: id === room.ownerId ? 'owner' : 'member' }));
+    return Object.entries(room.members).map(([id, name]) => ({
+      id,
+      name,
+      role: id === room.ownerId ? 'owner' : 'member'
+    }));
   }
 
   socket.on('disconnect', () => {

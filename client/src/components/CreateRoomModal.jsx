@@ -27,7 +27,7 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
             if (success) {
                 onRoomCreated(roomId)
 				closeRef?.current?.click()
-                navigate(`/channel/${roomId}`);
+                navigate(`/channel/${roomId}`, { state: { data: passwordRef.current.value } });
             }
         })
     }

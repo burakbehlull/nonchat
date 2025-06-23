@@ -19,7 +19,8 @@ export default function RoomPasswordModal({ children, clickName, data, clickRef 
 		if(!passwordRef.current.value) return toast("Şifre giriniz!")
 		if (success) {
 			closeRef.current.click();
-			navigate(`/channel/${data}`);
+			navigate(`/channel/${data}`, { state: { data: data } })
+			
 			
 		} else {
 			toast(`Şifre yanlış`);

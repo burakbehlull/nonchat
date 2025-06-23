@@ -1,155 +1,159 @@
-import { useRef, useState } from "react";
-
+import { useRef, useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
 import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
-
 import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend } from "@icons";
-import { Darkmode } from "@components"
-import { users } from "../../tests/data";
+import { Darkmode } from "@components";
+import { useSocket } from "@services";
+import toast from "react-hot-toast";
 
+export default function ChatRoom({ roomId: propRoomId, password }) {
+  const { roomId: urlRoomId } = useParams();
+  const roomId = propRoomId || urlRoomId;
 
+  const socket = useSocket();
+  const navigate = useNavigate();
+  const isMobile = useBreakpointValue({ base: true, sm: false });
 
-export default function ChatRoom() {
-  const isMobile = useBreakpointValue({ base: true, sm: false, md: false, lg: false });
-  const ref = useRef(null)
-  const dialogRef = useRef(null)
-  
-  const [veri, setVeri] = useState('');
-  
-  const GroupSettings = ()=> {
-	  return (
-		<ModalUI 
-			modalTitle="Oda Ayarları"
-			content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer" aria-label="Oda Ayarları"><FaUsersGear /></Icon>}
-			dialogRef={dialogRef}
-			onClick={()=> alert(veri)}
+  const [users, setUsers] = useState([]);
+  const [messages, setMessages] = useState([]);
+  const [info, setInfo] = useState(null);
+  const [input, setInput] = useState("");
 
-		>
-			<ModalInputUI
-				placeholder="Grup Başlığı"
-				label="Grup Başlığı"
-				ref={ref}
-        value={veri}
-        
+  const modalRef = useRef(null);
+  const groupTitleRef = useRef(null);
+
+  useEffect(() => {
+    if (!roomId || !socket) return;
+
+    socket.emit("getRoomInfo", { roomId }, (res) => {
+		console.log("get room info", res)
+      if (!res.success) {
+        toast.error(res.message || "Oda bulunamadı");
+        return navigate("/");
+      }
+
+      setInfo(res);
+
+      if (res.passwordProtected && !res.isOwner) {
+        toast.error("Lütfen anasayfadan giriş yapınız!");
+        return navigate("/");
+      }
+
+      socket.emit("joinRoom", { roomId, password }, (joinRes) => {
+        if (!joinRes.success) {
+          toast.error(joinRes.message || "Odaya katılamadın");
+          return navigate("/");
+        }
+
+        toast.success("Odaya katıldın!");
+      });
+    });
+
+    socket.on("roomUsers", setUsers);
+    socket.on("receiveMessage", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => {
+      socket.off("roomUsers");
+      socket.off("receiveMessage");
+    };
+  }, [roomId, socket]);
+
+  const sendMessage = () => {
+    if (!input.trim()) return;
+    socket.emit("sendMessage", { roomId, message: input });
+    setInput("");
+  };
+
+  const GroupSettings = () => (
+    <ModalUI
+      modalTitle="Oda Ayarları"
+      content={
+        <Icon size="md" color="gray.800" cursor="pointer">
+          <FaUsersGear />
+        </Icon>
+      }
+      dialogRef={modalRef}
+      onClick={() => toast.success("Ayarlar güncellendi")}
+    >
+      <ModalInputUI
+        placeholder="Grup Başlığı"
+        label="Grup Başlığı"
+        ref={groupTitleRef}
         type="text"
-			/>
-			<Flex gap={4} align="center">
-				<TextUI 
-					text="Limit" 
-					color="#09090B" 
-					fontWeight="medium"
-					textStyle="md"
-				/>
-				<NumberInputUI 
-					icon={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"><HiOutlineUsers /></Icon>} 
-					value={1}
-					min={0}
-				/>
-			</Flex>
-		</ModalUI>
-	  )
-  }
+      />
+      <Flex gap={4} align="center">
+        <TextUI text="Limit" fontWeight="medium" textStyle="md" />
+        <NumberInputUI icon={<HiOutlineUsers />} value={info?.limit || 10} min={0} />
+      </Flex>
+    </ModalUI>
+  );
 
   return (
     <Box p={0}>
-	  
-      <Flex
-        direction={{ base: "column", md: "row" }}
-        height="100vh"
-        overflow="hidden"
-      >
-		
-			
-		{isMobile ?(<></>) : (
-        <Flex
-          direction="column"
-          width={{ base: "100%", md: "290px" }}
-          height={{ base: "auto", md: "100vh" }}
-          borderRight={{ base: "none", md: "1px solid #e4e4e7", _dark: "1px solid #18181b" }}
-          borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #18181b", md: "none" }}
-          flexShrink={0}
-		    >
-          <Box borderBottom={{base: "1px solid #e4e4e7", _dark: "1px solid #18181b"}} p="18px">
-            <Flex gap={4} justify="space-between">
-              {isMobile ? null : <>
+      <Flex direction={{ base: "column", md: "row" }} height="100vh" overflow="hidden">
+        {!isMobile && (
+          <Flex direction="column" width="290px" borderRight="1px solid #e4e4e7" flexShrink={0}>
+            <Box borderBottom="1px solid #e4e4e7" p="18px">
+              <Flex gap={4} justify="space-between">
                 <Darkmode size="md" />
                 <GroupSettings />
-              </>}
-              
-            </Flex>
+              </Flex>
             </Box>
             <Box flex="1" p={4} overflowY="auto">
               <TextUI text="Kullanıcılar" fontWeight="medium" textStyle="md" mb={4} />
               <Members data={users} />
-          </Box>
-        </Flex>)
-    }
-		
+            </Box>
+          </Flex>
+        )}
 
-        <Flex
-          direction="column"
-          flex="1"
-          height={{ base: "auto", md: "97vh" }}
-        >
-          <Box borderBottom={{base: "1px solid #e4e4e7", _dark: "1px solid #18181b"}} p={4}>
+        <Flex direction="column" flex="1" height={{ base: "auto", md: "97vh" }}>
+          <Box borderBottom="1px solid #e4e4e7" p={4}>
             <Flex justify={isMobile ? "space-around" : "normal"}>
-              <TextUI text="Lorem ipsum dolor sit amet." isTruncated />
+              <TextUI text={info?.name || roomId || "Oda"} isTruncated />
               {isMobile && (
                 <Box display="flex" gap={4} mt={1}>
-                  <DrawerUI title="Katılımcılar" content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"><FaUsers aria-label="Kullanıcılar" role="img" /></Icon>}>
+                  <DrawerUI title="Katılımcılar" content={<Icon as={FaUsers} />}>
                     <Members data={users} />
                   </DrawerUI>
                   <GroupSettings />
                   <Darkmode size="md" />
-                  
                 </Box>
-                
-                )
-              }
+              )}
             </Flex>
           </Box>
 
           <Box flex="1" position="relative" overflow="hidden">
-            <Box
-              position="absolute"
-              top="0"
-              left="0"
-              right="0"
-              bottom="80px"
-              overflowY="auto"
-              pt={5}
-			        px={5}
-          >
-              {Array(40)
-                .fill(null)
-                .map((_, i) => (
-                  <Bubble key={i} data={users} />
-                ))}
-				
+            <Box position="absolute" top="0" left="0" right="0" bottom="80px" overflowY="auto" pt={5} px={5}>
+              {messages.map((msg, i) => (
+                <Bubble
+                  key={i}
+                  data={{
+                    name: msg.name,
+                    message: msg.content,
+                    time: msg.timestamp,
+                    isSelf: msg.from === socket.id,
+                  }}
+                />
+              ))}
             </Box>
 
-            <Box
-              position="absolute"
-              bottom="0"
-              left="0"
-              right="0"
-              pt={5}
-              px={4}
-              pb={{
-                base: "4",md:"1", lg: "1"
-              }}
-              color={{base: "black", _dark: "white"}}
-            >
-              <InputUI placeholder="Mesaj gönder" size="lg" borderRadius={15}
+            <Box position="absolute" bottom="0" left="0" right="0" pt={5} px={4} pb={{ base: 4, md: 1 }}>
+              <InputUI
+                placeholder="Mesaj gönder"
+                size="lg"
+                borderRadius={15}
                 type="text"
-                endElement={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer"
-                onClick={()=> alert('Button is pressed!')}
-                ><FiSend aria-label="Mesaj Gönder" role="img" /></Icon>}
-                onKeyDown={(e)=> {
-                  if (e.key === 'Enter') {
-                    alert('Enter key was pressed!');
-                  }
-                }}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                endElement={
+                  <Icon size="md" cursor="pointer" onClick={sendMessage}>
+                    <FiSend />
+                  </Icon>
+                }
+                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               />
             </Box>
           </Box>
