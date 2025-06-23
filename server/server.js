@@ -17,7 +17,7 @@ const io = new Server(server, {
 
 eventLoader(io);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 80;
 server.listen(PORT, () => {
   console.log(`🚀 Server başlatılıyor: http://localhost:${PORT}`);
 });
