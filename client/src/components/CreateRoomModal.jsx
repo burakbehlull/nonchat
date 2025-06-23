@@ -1,28 +1,55 @@
+import { useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSocket } from "@services";
 import { Flex } from "@chakra-ui/react"
 import { ModalUI, ModalInputUI, NumberInputUI, TextUI } from "@ui"
 
 export default function CreateRoomModal({ children, onCreate, clickName }) {
 
+    const socket = useSocket();
+    const roomNameRef = useRef(null);
+    const passwordRef = useRef(null);
+    const limitRef = useRef(null);
+    
+    const navigate = useNavigate();
+
+    const onRoomCreated = (roomId) => {
+        if (onCreate) {
+            onCreate(roomId);
+        }
+    }
+
+    const handleCreateRoom = () => {
+        socket.emit('createRoom', { name: roomNameRef.current.value, password: passwordRef.current.value, limit: Number(limitRef.current.value) }, ({ success, roomId }) => {
+            if (success) {
+                onRoomCreated(roomId)
+                navigate(`/channel/${roomId}`);
+            }
+        })
+    }
     return (
         <>
             <ModalUI
                 size="md"
                 content={children}
                 modalTitle="Oda Oluştur"
-                onClick={onCreate}
+                onClick={handleCreateRoom}
                 clickName="Oluştur"
             >
 
                 <ModalInputUI
                     placeholder="Oda Adı"
-
                     label="Oda Adı"
                     type="text"
+                    ref={roomNameRef}
+                    required
                 />
                 <ModalInputUI
                     placeholder="Şifre (opsiyonel)"
                     label="Şifre"
                     type="password"
+                    ref={passwordRef}
+                    required={false}
                 />
                 <Flex gap={4} align="center">
                     <TextUI 
@@ -38,6 +65,8 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                         type="number"
                         value={10}
                         min={0}
+                        ref={limitRef}
+                        required={false}
                     />
                 </Flex>
                 
