@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CreateRoomModal, RoomPasswordModal } from "@components";
 import { useSocket } from "@services";
 import { useState, useRef } from "react";
-
+import { toast } from "react-hot-toast"
 
 export default function HomeContent(){
 	
@@ -20,15 +20,17 @@ export default function HomeContent(){
 	const handleJoinClick = () => {
 	
 	  socket.emit("getRoomInfo", { roomId: inviteCode }, (res) => {
-		if (!res.success) return // oda yok vs..
+		if (!res.success) return toast.error(`Oda yok`)
 
 		if (res.isOwner || !res.passwordProtected) {
 
 		  socket.emit("joinRoom", { roomId: inviteCode }, ({ success, message }) => {
 			if (success) {
+			  toast.success("Giriş başarılı")
+				
 			  navigate(`/channel/${inviteCode}`);
 			} else {
-			  alert("Katılamadı: " + message);
+			  toast.error(`Katılamadı: ${message}`)
 			}
 		  });
 		} else {
@@ -40,12 +42,7 @@ export default function HomeContent(){
 	
     const ButtonCheck = (props) => {
         return (
-            <CreateRoomModal
-                onCreate={() => {
-                    console.log("Oda oluşturuldu");
-                    // Burada oda oluşturma işlemi yapılabilir
-                }}
-            >
+            <CreateRoomModal>
                 <Button 
                     size="lg"
                     variant="solid"

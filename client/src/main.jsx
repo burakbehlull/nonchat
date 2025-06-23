@@ -8,6 +8,8 @@ import { Provider } from 'react-redux'
 import { store } from './store/index'
 import { SocketProvider } from "@services"
 
+import { Toaster } from 'react-hot-toast'
+
 import App from "./App.jsx"
 
 createRoot(document.getElementById("root")).render(
@@ -17,6 +19,10 @@ createRoot(document.getElementById("root")).render(
 		  <SocketProvider>
 			<BrowserRouter>
 				<App />
+				<Toaster
+				  position="top-center"
+				  reverseOrder={false}
+				/>
 			</BrowserRouter>
 		  </SocketProvider>
 		</ChakraProvider>
