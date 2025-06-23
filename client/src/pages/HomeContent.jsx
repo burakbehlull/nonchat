@@ -2,6 +2,7 @@ import { Box, Button, Center, Heading, Stack, Highlight, Text, useBreakpointValu
 import { HiChatAlt2 } from "@icons";
 import { InputUI } from "@ui";
 import { useNavigate } from "react-router-dom";
+import { CreateRoomModal } from "@components";
 
 export default function HomeContent(){
 	
@@ -14,25 +15,32 @@ export default function HomeContent(){
 	
     const ButtonCheck = (props) => {
         return (
-            <Button 
-                size="lg"
-                variant="solid"
-				//1e293b
-                bg="#2563eb"
-                color="white"
-                _hover={{ bg: '#1e40af' }}
-                _active={{ bg: '#1e3a8a' }}
-                _focus={{ bg: 'outline' }}
-                rounded="lg"
-                transition="background-color 0.2s ease-in-out"
-                
-                minWidth="15rem" 
-                width={isMobile ? "100%" : "auto"}
-                {...props}
+            <CreateRoomModal
+                onCreate={() => {
+                    console.log("Oda oluşturuldu");
+                    // Burada oda oluşturma işlemi yapılabilir
+                }}
             >
-                <HiChatAlt2 />
-                Yeni Oda
-            </Button>
+                <Button 
+                    size="lg"
+                    variant="solid"
+                    //1e293b
+                    bg="#2563eb"
+                    color="white"
+                    _hover={{ bg: '#1e40af' }}
+                    _active={{ bg: '#1e3a8a' }}
+                    _focus={{ bg: 'outline' }}
+                    rounded="lg"
+                    transition="background-color 0.2s ease-in-out"
+                    
+                    minWidth="15rem" 
+                    width={isMobile ? "100%" : "auto"}
+                    {...props}
+                >
+                    <HiChatAlt2 />
+                    Yeni Oda
+                </Button>
+            </CreateRoomModal>
         )
     }
 

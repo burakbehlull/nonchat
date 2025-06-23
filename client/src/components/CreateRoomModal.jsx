@@ -1,13 +1,16 @@
-import { ModalUI, ModalInputUI, NumberInputUI } from "@ui"
-export default function CreateRoomModal({ content, onCreate }) {
+import { Flex } from "@chakra-ui/react"
+import { ModalUI, ModalInputUI, NumberInputUI, TextUI } from "@ui"
+
+export default function CreateRoomModal({ children, onCreate, clickName }) {
 
     return (
         <>
             <ModalUI
                 size="md"
-                content={content}
+                content={children}
                 modalTitle="Oda Oluştur"
                 onClick={onCreate}
+                clickName="Oluştur"
             >
 
                 <ModalInputUI
@@ -21,14 +24,23 @@ export default function CreateRoomModal({ content, onCreate }) {
                     label="Şifre"
                     type="password"
                 />
-                <NumberInputUI
-                    placeholder="Limit"
-                    label="Limit"
-                    icon={null}
-                    type="number"
-                    value={10}
-                    min={0}
-                />
+                <Flex gap={4} align="center">
+                    <TextUI 
+                        text="Limit" 
+                        color="#09090B" 
+                        fontWeight="medium"
+                        textStyle="md"
+                    />
+                    <NumberInputUI
+                        placeholder="Limit"
+                        label="Limit"
+                        icon={null}
+                        type="number"
+                        value={10}
+                        min={0}
+                    />
+                </Flex>
+                
             </ModalUI>
         </>
     )
