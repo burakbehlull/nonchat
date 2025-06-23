@@ -23,7 +23,8 @@ export default function ChatRoom() {
 			modalTitle="Oda Ayarları"
 			content={<Icon size="md" color={{ base: "gray.800", _dark: "gray.100" }} cursor="pointer" aria-label="Oda Ayarları"><FaUsersGear /></Icon>}
 			dialogRef={dialogRef}
-      onClick={()=> alert(veri)}
+			onClick={()=> alert(veri)}
+
 		>
 			<ModalInputUI
 				placeholder="Grup Başlığı"

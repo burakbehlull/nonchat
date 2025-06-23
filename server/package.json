@@ -1,7 +1,18 @@
 {
+  "name": "nonechat-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+	"dev": "node server"
+   },
+  "keywords": [],
+  "author": "Burak <@burakbehlull>",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
-    "socket.io": "^4.8.1",
-    "uuid": "^11.1.0"
+    "nanoid": "^5.1.5",
+    "socket.io": "^4.8.1"
   }
 }
