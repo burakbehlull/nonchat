@@ -1,15 +1,18 @@
 import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "@services";
 import { Flex } from "@chakra-ui/react"
+
+import { useSocket } from "@services";
 import { ModalUI, ModalInputUI, NumberInputUI, TextUI } from "@ui"
 
 export default function CreateRoomModal({ children, onCreate, clickName }) {
 
     const socket = useSocket();
+
     const roomNameRef = useRef(null);
     const passwordRef = useRef(null);
     const limitRef = useRef(null);
+	const closeRef = useRef(null);
     
     const navigate = useNavigate();
 
@@ -23,6 +26,7 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
         socket.emit('createRoom', { name: roomNameRef.current.value, password: passwordRef.current.value, limit: Number(limitRef.current.value) }, ({ success, roomId }) => {
             if (success) {
                 onRoomCreated(roomId)
+				closeRef?.current?.click()
                 navigate(`/channel/${roomId}`);
             }
         })
@@ -35,6 +39,7 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                 modalTitle="Oda Oluştur"
                 onClick={handleCreateRoom}
                 clickName="Oluştur"
+				closeRef={closeRef}
             >
 
                 <ModalInputUI
@@ -69,7 +74,6 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                         required={false}
                     />
                 </Flex>
-                
             </ModalUI>
         </>
     )

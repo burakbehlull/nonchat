@@ -34,6 +34,18 @@ export default (io, socket) => {
     io.to(roomId).emit('roomUsers', getUsers(roomId));
   });
 
+  socket.on('getRoomInfo', ({ roomId }, callback) => {
+	  const room = rooms[roomId];
+	  if (!room) return callback({ success: false, message: 'Room not found.' });
+
+	  const isOwner = socket.id === room.ownerId;
+	  callback({
+		success: true,
+		isOwner,
+		passwordProtected: !!room.password,
+	  });
+	});
+
   socket.on('changeName', ({ roomId, newName }) => {
     const room = rooms[roomId];
     if (!room) return;

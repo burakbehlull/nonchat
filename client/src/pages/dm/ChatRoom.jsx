@@ -15,7 +15,6 @@ export default function ChatRoom() {
   const dialogRef = useRef(null)
   
   const [veri, setVeri] = useState('');
-  const handleChange = (e)=> setVeri(e.target.value); 
   
   const GroupSettings = ()=> {
 	  return (
@@ -31,7 +30,6 @@ export default function ChatRoom() {
 				label="Grup Başlığı"
 				ref={ref}
         value={veri}
-        onChange={handleChange}
         
         type="text"
 			/>
