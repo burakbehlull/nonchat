@@ -1,9 +1,9 @@
 import { Menu, Portal, Show } from "@chakra-ui/react"
 import { Tooltip } from "./tooltip"
 
-const TooltipMenu = ({content, children}) => {
+const TooltipMenu = ({content, children, ...props}) => {
   return (
-    <Menu.Root closeOnSelect={false} blurOnSelect={false}>
+    <Menu.Root closeOnSelect={false}>
       <Menu.Trigger asChild>
 		      {content ? content : <></>}
       </Menu.Trigger>
@@ -25,7 +25,7 @@ const MenuItem = (props) => {
       <Tooltip
         ids={{ trigger: value }}
         openDelay={200}
-        closeDelay={999999}
+        closeDelay={0}
         positioning={{ placement: "right" }}
         content={title}
       >

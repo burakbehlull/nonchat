@@ -20,7 +20,7 @@ export {
     Input as InputUI,
 	NumberInputUI,
 	
-	Bubble,
+	Bubble as BubbleUI,
 	Members,
 	
 	DrawerUI,

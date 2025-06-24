@@ -1,39 +1,35 @@
-const fs = require('fs');
-const path = require('path');
+import fs from 'fs';
+import path from 'path';
+import { pathToFileURL } from 'url';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-module.exports = (io) => {
-    const eventsPath = path.join(__dirname);
-    const events = [];
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
-    fs.readdir(eventsPath, (err, files) => {
-        if (err) {
-            console.error('Error reading directory:', err);
-            return;
-        }
+export default async function eventLoader(io) {
+  const eventsPath = __dirname;
+  const eventFiles = fs.readdirSync(eventsPath).filter(
+    file => file.endsWith('.js') && file !== 'eventLoader.js'
+  );
 
-        const eventFiles = files
-            .filter(file => file.endsWith('.js') && file !== path.basename(__filename));
+  const events = [];
 
-        if (eventFiles.length === 0) {
-            console.log('No events to load');
-            return;
-        }
+  for (const file of eventFiles) {
+    try {
+      const filePath = path.join(eventsPath, file);
+      const fileUrl = pathToFileURL(filePath);
+      const eventModule = await import(fileUrl);
+      if (typeof eventModule.default === 'function') {
+        events.push(eventModule.default);
+      }
+    } catch (err) {
+      console.error(`Failed to load ${file}:`, err);
+    }
+  }
 
-        eventFiles.forEach(file => {
-            try {
-                const event = require(path.join(eventsPath, file));
-                events.push(event);
-            } catch (error) {
-                console.error(`Event loading error ${file}:`, error);
-            }
-        });
-
-        console.log('All events have been imported successfully');
-
-        io.on('connect', (socket) => {
-            events.forEach(event => {
-                event(io, socket);
-            });
-        });
-    });
-};
+  io.on('connection', (socket) => {
+    console.log(`🔌 Socket connected: ${socket.id}`);
+    events.forEach(event => event(io, socket));
+  });
+}

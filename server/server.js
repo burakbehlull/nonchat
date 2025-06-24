@@ -1,9 +1,13 @@
-const http = require('http');
-const { Server } = require('socket.io');
-const eventLoader = require('./events/eventLoader.js');
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import cors from 'cors';
+import eventLoader from './events/eventLoader.js';
 
-const server = http.createServer();
+const app = express();
+app.use(cors());
 
+const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: '*',
@@ -13,20 +17,7 @@ const io = new Server(server, {
 
 eventLoader(io);
 
-io.on('connection', (socket) => {
-  console.log(`New connection: ${socket.id}`);
-
-  socket.on('sendMessage', (data) => {
-    console.log(`Received message: ${data}`);
-    io.emit('receiveMessage', data);
-  });
-
-  socket.on('disconnect', () => {
-    console.log(`Disconnected: ${socket.id}`);
-  });
-});
-
-const PORT = 3000;
+const PORT = process.env.PORT || 80;
 server.listen(PORT, () => {
-  console.log(`Socket.io server running on port ${PORT}`);
+  console.log(`🚀 Server başlatılıyor: http://localhost:${PORT}`);
 });

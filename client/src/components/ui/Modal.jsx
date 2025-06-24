@@ -2,7 +2,7 @@
 
 import { Button, Dialog, Field, Input, Portal, Stack } from "@chakra-ui/react"
 
-const ModalUI = ({modalTitle, children, content, dialogRef, clickRef, onClick}) => {
+const ModalUI = ({modalTitle, children, content, dialogRef, clickRef, onClick, clickName, closeRef}) => {
   return (
     <Dialog.Root size="xs" >
       <Dialog.Trigger ref={clickRef} asChild>
@@ -22,9 +22,9 @@ const ModalUI = ({modalTitle, children, content, dialogRef, clickRef, onClick}) 
             </Dialog.Body>
             <Dialog.Footer>
               <Dialog.ActionTrigger asChild>
-                <Button variant="outline">Kapat</Button>
+                <Button variant="outline" ref={closeRef}>Kapat</Button>
               </Dialog.ActionTrigger>
-              <Button onClick={onClick}>Kaydet</Button>
+              <Button onClick={onClick}>{clickName ?? "Kaydet"}</Button>
             </Dialog.Footer>
           </Dialog.Content>
         </Dialog.Positioner>
