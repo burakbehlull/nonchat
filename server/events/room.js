@@ -64,6 +64,7 @@ export default (io, socket) => {
       name: room.name,
       limit: room.limit,
       passwordProtected: !!room.password,
+	  users: getUsers(roomId)
     });
   });
 

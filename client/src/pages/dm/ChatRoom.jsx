@@ -171,7 +171,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         )}
 
         <Flex direction="column" flex="1" height={{ base: "auto", md: "97vh" }}>
-          <Box borderBottom="1px solid #e4e4e7" p={4}>
+          <Box borderBottom="1px solid #e4e4e7" p={4} >
             <Flex justify={isMobile ? "space-around" : "normal"}>
               <TextUI text={info?.name || roomId || "Oda"} isTruncated />
               {isMobile && (
