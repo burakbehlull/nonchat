@@ -58,7 +58,8 @@ const Members = ({data, roomId, isOwner, currentUserId}) => {
 					{isOwner && !isSelf &&
 						<TooltipMenuItem value="ban-user" title="Kullanıcıyı Yasakla"
 							onClick={()=> handleBan(user.id)}
-						> Yasakla {user.role} - {user.id}</TooltipMenuItem>
+							color="red"
+						> Yasakla</TooltipMenuItem>
 					}
 				</TooltipMenu>
 			</Flex>

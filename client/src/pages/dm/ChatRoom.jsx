@@ -25,12 +25,12 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 
   const modalRef = useRef(null);
   const groupTitleRef = useRef(null);
+  const groupLimitRef = useRef(null);
 
 
   useEffect(() => {
 	  if (!roomId || !socket) return;
 
-	  // getRoomInfo sadece ilk kez girerken çağrılır
 	  socket.emit("getRoomInfo", { roomId }, (res) => {
 		if (!res.success) {
 		  toast.error(res.message || "Oda bulunamadı");
@@ -78,6 +78,19 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
     socket.emit("sendMessage", { roomId, message: input });
     setInput("");
   };
+  
+  const handleRoomSettingChange = ()=>{
+	  const newName = groupTitleRef.current.value
+	  const newLimit = Number(groupLimitRef.current.value)
+	  socket.emit("updateRoom", { roomId, name: newName, limit: newLimit,}, (res) => {
+		if (res.success) {
+		  toast.success("Oda ayarları güncellendi!");
+		  setInfo(res.room);
+		} else {
+		  toast.error(res.message || "Güncelleme başarısız!");
+		}
+	  });
+  }
 
   const GroupSettings = () => (
     <ModalUI
@@ -88,17 +101,18 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         </Icon>
       }
       dialogRef={modalRef}
-      onClick={() => toast.success("Ayarlar güncellendi")}
+      onClick={handleRoomSettingChange}
     >
       <ModalInputUI
-        placeholder="Grup Başlığı"
+        placeholder={info?.name || "Grup Başlığı"}
         label="Grup Başlığı"
         ref={groupTitleRef}
         type="text"
       />
       <Flex gap={4} align="center">
         <TextUI text="Limit" fontWeight="medium" textStyle="md" />
-        <NumberInputUI icon={<HiOutlineUsers />} value={info?.limit || 10} min={0} />
+        <NumberInputUI icon={<HiOutlineUsers />}
+		value={info?.limit || 10} min={0} ref={groupLimitRef} />
       </Flex>
     </ModalUI>
   );
@@ -111,7 +125,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
             <Box borderBottom="1px solid #e4e4e7" p="18px">
               <Flex gap={4} justify="space-between">
                 <Darkmode size="md" />
-                <GroupSettings />
+                {isOwner && <GroupSettings />}
               </Flex>
             </Box>
             <Box flex="1" p={4} overflowY="auto">
@@ -130,7 +144,8 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
                   <DrawerUI title="Katılımcılar" content={<Icon as={FaUsers} />}>
                     <Members data={users} isOwner={isOwner} currentUserId={currentUserId} />
                   </DrawerUI>
-                  <GroupSettings />
+				  {isOwner && <GroupSettings />}
+					  
                   <Darkmode size="md" />
                 </Box>
               )}

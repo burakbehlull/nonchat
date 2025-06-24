@@ -1,6 +1,6 @@
 import { NumberInput, InputGroup } from "@chakra-ui/react"
 
-const NumberInputUI = ({value, icon, ...props}) => {
+const NumberInputUI = ({value, icon, ref, ...props}) => {
   return (
     <NumberInput.Root defaultValue={value} width="200px" {...props}>
       <NumberInput.Control />
@@ -12,9 +12,9 @@ const NumberInputUI = ({value, icon, ...props}) => {
           </NumberInput.Scrubber>
         }
       >
-        <NumberInput.Input />
+        <NumberInput.Input ref={ref ?? null} />
       </InputGroup>
-	  : <NumberInput.Input />}
+	  : <NumberInput.Input ref={ref ?? null} />}
     </NumberInput.Root>
   )
 }
