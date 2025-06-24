@@ -1,7 +1,7 @@
 import { Menu, Portal, Show } from "@chakra-ui/react"
 import { Tooltip } from "./tooltip"
 
-const TooltipMenu = ({content, children}) => {
+const TooltipMenu = ({content, children, ...props}) => {
   return (
     <Menu.Root closeOnSelect={false}>
       <Menu.Trigger asChild>

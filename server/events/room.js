@@ -47,12 +47,23 @@ export default (io, socket) => {
     });
   });
 
-  socket.on('changeName', ({ roomId, newName }) => {
-    const room = rooms[roomId];
-    if (!room) return;
-    if (!room.members[socket.id]) return;
-    room.members[socket.id] = newName;
-    io.to(roomId).emit('roomUsers', getUsers(roomId));
+  socket.on('changeName', ({ roomId, newName, targetSocketId }) => {
+	  const room = rooms[roomId];
+	  if (!room) return;
+
+	  if (socket.id === targetSocketId) {
+		if (!room.members[socket.id]) return;
+		room.members[socket.id] = newName;
+	  }
+
+	  else if (room.ownerId === socket.id) {
+		if (!room.members[targetSocketId]) return;
+		room.members[targetSocketId] = newName;
+	  } else {
+		return
+	  }
+
+	  io.to(roomId).emit('roomUsers', getUsers(roomId));
   });
 
   socket.on('updateRoom', ({ roomId, name, limit }, callback) => {

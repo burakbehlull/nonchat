@@ -11,6 +11,8 @@ import { LuArrowRightLeft } from "react-icons/lu"
 
 import { Icon } from "@chakra-ui/react";
 
+import { TbCrown } from "react-icons/tb";
+
 function IconUI({children, color, size,  ...props}) {
 	return (
 		<Icon 
@@ -39,5 +41,6 @@ export {
 	HiAtSymbol,
 	HiStar,
 	BsThreeDotsVertical,
-	LuArrowRightLeft
+	LuArrowRightLeft,
+	TbCrown
 }

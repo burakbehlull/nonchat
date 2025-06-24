@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
 import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
 import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend } from "@icons";
@@ -16,50 +16,62 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   const isMobile = useBreakpointValue({ base: true, sm: false });
 
   const [users, setUsers] = useState([]);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);  
+  const [isOwner, setIsOwner] = useState(false);
   const [info, setInfo] = useState(null);
   const [input, setInput] = useState("");
+  const [currentUserId, setCurrentUserId] = useState("");
+  const [joinedRoom, setJoinedRoom] = useState(false);
 
   const modalRef = useRef(null);
   const groupTitleRef = useRef(null);
 
+
   useEffect(() => {
-    if (!roomId || !socket) return;
+	  if (!roomId || !socket) return;
 
-    socket.emit("getRoomInfo", { roomId }, (res) => {
-		console.log("get room info", res)
-      if (!res.success) {
-        toast.error(res.message || "Oda bulunamadı");
-        return navigate("/");
-      }
+	  // getRoomInfo sadece ilk kez girerken çağrılır
+	  socket.emit("getRoomInfo", { roomId }, (res) => {
+		if (!res.success) {
+		  toast.error(res.message || "Oda bulunamadı");
+		  return navigate("/");
+		}
 
-      setInfo(res);
+		setInfo(res);
+		setIsOwner(res.isOwner);
+		setCurrentUserId(socket.id);
 
-      if (res.passwordProtected && !res.isOwner) {
-        toast.error("Lütfen anasayfadan giriş yapınız!");
-        return navigate("/");
-      }
+		socket.emit("joinRoom", { roomId, password }, (joinRes) => {
+		  if (!joinRes.success) {
+			toast.error(joinRes.message || "Odaya katılamadın");
+			return navigate("/");
+		  }
 
-      socket.emit("joinRoom", { roomId, password }, (joinRes) => {
-        if (!joinRes.success) {
-          toast.error(joinRes.message || "Odaya katılamadın");
-          return navigate("/");
-        }
-
-        toast.success("Odaya katıldın!");
-      });
-    });
-
-    socket.on("roomUsers", setUsers);
-    socket.on("receiveMessage", (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    });
-
-    return () => {
-      socket.off("roomUsers");
-      socket.off("receiveMessage");
-    };
+		  setJoinedRoom(true);
+		  if(res.isOwner){
+			toast.success("Oda oluşturuldu!");
+		  } else {
+			toast.success("Odaya katıldın!"); 
+		  }
+		});
+	  });
   }, [roomId, socket]);
+
+
+  useEffect(() => {
+	  if (!joinedRoom || !socket) return;
+
+	  socket.on("roomUsers", setUsers);
+	  socket.on("receiveMessage", (msg) => {
+		setMessages((prev) => [...prev, msg]);
+	  });
+
+	  return () => {
+		socket.off("roomUsers");
+		socket.off("receiveMessage");
+	  };
+   }, [joinedRoom, socket]);
+
 
   const sendMessage = () => {
     if (!input.trim()) return;
@@ -104,7 +116,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
             </Box>
             <Box flex="1" p={4} overflowY="auto">
               <TextUI text="Kullanıcılar" fontWeight="medium" textStyle="md" mb={4} />
-              <Members data={users} />
+              <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
             </Box>
           </Flex>
         )}
@@ -116,7 +128,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
               {isMobile && (
                 <Box display="flex" gap={4} mt={1}>
                   <DrawerUI title="Katılımcılar" content={<Icon as={FaUsers} />}>
-                    <Members data={users} />
+                    <Members data={users} isOwner={isOwner} currentUserId={currentUserId} />
                   </DrawerUI>
                   <GroupSettings />
                   <Darkmode size="md" />
