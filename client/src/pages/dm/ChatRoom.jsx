@@ -1,7 +1,7 @@
-import { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
-import { InputUI, Bubble, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
+import { InputUI, BubbleUI, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
 import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend } from "@icons";
 import { Darkmode } from "@components";
 import { useSocket } from "@services";
@@ -10,7 +10,6 @@ import toast from "react-hot-toast";
 export default function ChatRoom({ roomId: propRoomId, password }) {
   const { roomId: urlRoomId } = useParams();
   const roomId = propRoomId || urlRoomId;
-
   const socket = useSocket();
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, sm: false });
@@ -26,6 +25,13 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   const modalRef = useRef(null);
   const groupTitleRef = useRef(null);
   const groupLimitRef = useRef(null);
+  const scrollRef = useRef(null);
+  
+   useEffect(() => {
+	  if (scrollRef.current) {
+		scrollRef.current.scrollIntoView({ behavior: "smooth" });
+	  }
+   }, [messages]);
 
 
   useEffect(() => {
@@ -57,6 +63,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 	  });
   }, [roomId, socket]);
 
+  
 
   useEffect(() => {
 	  if (!joinedRoom || !socket) return;
@@ -71,12 +78,26 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		socket.off("receiveMessage");
 	  };
    }, [joinedRoom, socket]);
+   
+   useEffect(() => {
+	  socket.on("bannedFromRoom", ({ roomId }) => {
+		toast.error("Bu odadan banlandınız!");
+		navigate("/")
+	  });
+
+	  return () => socket.off("bannedFromRoom");
+  }, [socket]);
 
 
   const sendMessage = () => {
-    if (!input.trim()) return;
-    socket.emit("sendMessage", { roomId, message: input });
-    setInput("");
+	  if (!input.trim()) return;
+	  socket.emit("sendMessage", { roomId, message: input }, (res) => {
+		if (res?.success) {
+		  setInput("");
+		} else {
+		  toast.error("Mesaj gönderilemedi");
+		}
+	  });
   };
   
   const handleRoomSettingChange = ()=>{
@@ -116,6 +137,20 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
       </Flex>
     </ModalUI>
   );
+  
+  const MessageList = React.memo(({ messages, socketId }) => {
+  return (
+		<>
+		  {messages.map((msg, i) => (
+			<BubbleUI
+			  key={msg.id || i}
+			  data={msg}
+			  isSelf={msg.from === socketId}
+			/>
+		  ))}
+		</>
+	  );
+  });
 
   return (
     <Box p={0}>
@@ -154,17 +189,8 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 
           <Box flex="1" position="relative" overflow="hidden">
             <Box position="absolute" top="0" left="0" right="0" bottom="80px" overflowY="auto" pt={5} px={5}>
-              {messages.map((msg, i) => (
-                <Bubble
-                  key={i}
-                  data={{
-                    name: msg.name,
-                    message: msg.content,
-                    time: msg.timestamp,
-                    isSelf: msg.from === socket.id,
-                  }}
-                />
-              ))}
+               <MessageList messages={messages} socketId={socket.id} />
+			   <div ref={scrollRef} />
             </Box>
 
             <Box position="absolute" bottom="0" left="0" right="0" pt={5} px={4} pb={{ base: 4, md: 1 }}>
