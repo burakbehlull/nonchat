@@ -3,6 +3,9 @@ import { nanoid } from 'nanoid';
 const rooms = {};
 
 export default (io, socket) => {
+  const userId = socket.handshake.query.userId;
+  socket.data.userId = userId;
+
   socket.on('createRoom', ({ name, password, limit }, callback) => {
     const roomId = nanoid(8);
     rooms[roomId] = {
@@ -14,7 +17,11 @@ export default (io, socket) => {
       banned: [],
     };
 
-    rooms[roomId].members[socket.id] = 'Nobody';
+    rooms[roomId].members[socket.id] = {
+      userId,
+      name: "Nobody"
+    };
+
     socket.join(roomId);
 
     callback({ success: true, roomId });
@@ -23,11 +30,24 @@ export default (io, socket) => {
   socket.on('joinRoom', ({ roomId, password }, callback) => {
     const room = rooms[roomId];
     if (!room) return callback({ success: false, message: 'Room not found.' });
-    if (room.banned.includes(socket.id)) return callback({ success: false, message: 'You are banned.' });
-    if (room.password && room.password !== password) return callback({ success: false, message: 'Wrong password.' });
-    if (Object.keys(room.members).length >= room.limit) return callback({ success: false, message: 'Room is full.' });
 
-    room.members[socket.id] = 'Nobody';
+    if (room.banned.includes(userId)) {
+      return callback({ success: false, message: 'You are banned.' });
+    }
+
+    if (room.password && room.password !== password) {
+      return callback({ success: false, message: 'Wrong password.' });
+    }
+
+    if (Object.keys(room.members).length >= room.limit) {
+      return callback({ success: false, message: 'Room is full.' });
+    }
+
+    room.members[socket.id] = {
+      userId,
+      name: "Nobody"
+    };
+
     socket.join(roomId);
     callback({ success: true, room });
 
@@ -41,91 +61,89 @@ export default (io, socket) => {
     callback({
       success: true,
       isOwner,
-	  name: room.name,
-	  limit: room.limit,
+      name: room.name,
+      limit: room.limit,
       passwordProtected: !!room.password,
     });
   });
 
   socket.on('changeName', ({ roomId, newName, targetSocketId }) => {
-	  const room = rooms[roomId];
-	  if (!room) return;
+    const room = rooms[roomId];
+    if (!room) return;
 
-	  if (socket.id === targetSocketId) {
-		if (!room.members[socket.id]) return;
-		room.members[socket.id] = newName;
-	  }
+    const isSelf = socket.id === targetSocketId;
+    const isOwner = room.ownerId === socket.id;
 
-	  else if (room.ownerId === socket.id) {
-		if (!room.members[targetSocketId]) return;
-		room.members[targetSocketId] = newName;
-	  } else {
-		return
-	  }
+    if (!isSelf && !isOwner) return;
 
-	  io.to(roomId).emit('roomUsers', getUsers(roomId));
+    if (!room.members[targetSocketId]) return;
+
+    room.members[targetSocketId].name = newName;
+
+    io.to(roomId).emit('roomUsers', getUsers(roomId));
   });
 
   socket.on('updateRoom', ({ roomId, name, limit }, callback) => {
     const room = rooms[roomId];
     if (!room) return callback({ success: false });
     if (room.ownerId !== socket.id) return callback({ success: false, message: 'Not authorized.' });
+
     room.name = name || room.name;
     room.limit = limit || room.limit;
+
     callback({ success: true, room });
   });
 
   socket.on("kickUser", ({ roomId, targetSocketId }, callback) => {
-	  const room = rooms[roomId];
-	  if (!room) return;
+    const room = rooms[roomId];
+    if (!room) return;
 
-	  const targetUser = room.members[targetSocketId];
-	  if (!targetUser) return;
+    const target = room.members[targetSocketId];
+    if (!target) return;
 
-	  if (!room.banned.includes(targetSocketId)) {
-		room.banned.push(targetSocketId);
-	  }
+    if (!room.banned.includes(target.userId)) {
+      room.banned.push(target.userId);
+    }
 
-	  const targetSocket = io.sockets.sockets.get(targetSocketId);
-	  if (targetSocket) {
-		targetSocket.leave(roomId);
-		targetSocket.emit("bannedFromRoom", { roomId });
-	  }
+    const targetSocket = io.sockets.sockets.get(targetSocketId);
+    if (targetSocket) {
+      targetSocket.leave(roomId);
+      targetSocket.emit("bannedFromRoom", { roomId });
+    }
 
-	  delete room.members[targetSocketId];
+    delete room.members[targetSocketId];
+    io.to(roomId).emit("roomUsers", getUsers(roomId));
 
-	  io.to(roomId).emit("roomUsers", getUsers(roomId));
-
-	  callback?.({ success: true });
-   });
-
+    callback?.({ success: true });
+  });
 
   socket.on('sendMessage', ({ roomId, message }, callback) => {
     const room = rooms[roomId];
     if (!room) return;
 
-    const name = room.members[socket.id] || "Anonim";
-	const role = room.ownerId === socket.id ? 'owner' : 'member';
-	
+    const member = room.members[socket.id];
+    const name = member?.name || "Anonim";
+    const role = room.ownerId === socket.id ? 'owner' : 'member';
+
     const msg = {
       id: nanoid(6),
       from: socket.id,
       name,
       content: message,
-	  role,
+      role,
       timestamp: new Date().toISOString(),
     };
 
     io.to(roomId).emit('receiveMessage', msg);
-    if (callback) callback({ success: true });
+    callback?.({ success: true });
   });
 
   function getUsers(roomId) {
     const room = rooms[roomId];
     if (!room) return [];
-    return Object.entries(room.members).map(([id, name]) => ({
+    return Object.entries(room.members).map(([id, member]) => ({
       id,
-      name,
+      name: member.name,
       role: id === room.ownerId ? 'owner' : 'member'
     }));
   }
@@ -136,7 +154,10 @@ export default (io, socket) => {
       if (room.members[socket.id]) {
         delete room.members[socket.id];
         io.to(roomId).emit('roomUsers', getUsers(roomId));
-        if (Object.keys(room.members).length === 0) delete rooms[roomId];
+
+        if (Object.keys(room.members).length === 0) {
+          delete rooms[roomId];
+        }
       }
     }
   });

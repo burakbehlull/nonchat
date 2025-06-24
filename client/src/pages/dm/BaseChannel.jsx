@@ -3,7 +3,7 @@ import { ChatRoom } from "@pages"
 
 export default function BaseChannel(){
     const { channelId } = useParams()
-	 const { state } = useLocation()
+	const { state } = useLocation()
     return (
         <>
             <ChatRoom roomId={channelId} password={state?.data} />
