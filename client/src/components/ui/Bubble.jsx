@@ -13,7 +13,7 @@ const Bubble = React.memo(({ data, isSelf, isOwner, showMeta }) => {
 			  <Avatar.Image src={NoneUser} />
 			</Avatar.Root>
 		  ) : (
-			<Box w="48px" h="30px" flexShrink={0} />
+			<Box w="48px" h="28px" flexShrink={0} />
 		  )}
 
 		  <Stack gap="0" flex="1">

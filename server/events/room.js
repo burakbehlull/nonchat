@@ -23,6 +23,8 @@ export default (io, socket) => {
     };
 
     socket.join(roomId);
+	
+	io.to(roomId).emit('roomUsers', getUsers(roomId));
 
     callback({ success: true, roomId });
   });
