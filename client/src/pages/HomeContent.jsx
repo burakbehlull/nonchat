@@ -18,6 +18,7 @@ export default function HomeContent(){
 	const [inviteCode, setInviteCode] = useState("")
 	
 	const handleJoinClick = () => {
+	  if(!inviteCode || inviteCode==="") return toast.error("Lütfen davet kodunu giriniz.")
 	
 	  socket.emit("getRoomInfo", { roomId: inviteCode }, (res) => {
 		if (!res.success) return toast.error(`Oda yok`)
