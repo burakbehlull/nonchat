@@ -102,6 +102,10 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   
   const handleRoomSettingChange = ()=>{
 	  const newName = groupTitleRef.current.value
+	  if(newName.length > 12){
+		toast.error("Sadece 12 harf")
+		return
+	  }
 	  const newLimit = Number(groupLimitRef.current.value)
 	  socket.emit("updateRoom", { roomId, name: newName, limit: newLimit,}, (res) => {
 		if (res.success) {
@@ -129,28 +133,48 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         label="Grup Başlığı"
         ref={groupTitleRef}
         type="text"
+		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
+		
       />
       <Flex gap={4} align="center">
         <TextUI text="Limit" fontWeight="medium" textStyle="md" />
         <NumberInputUI icon={<HiOutlineUsers />}
+		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
 		value={info?.limit || 10} min={0} ref={groupLimitRef} />
       </Flex>
     </ModalUI>
   );
   
   const MessageList = React.memo(({ messages, socketId }) => {
-  return (
+	  return (
 		<>
-		  {messages.map((msg, i) => (
-			<BubbleUI
-			  key={msg.id || i}
-			  data={msg}
-			  isSelf={msg.from === socketId}
-			/>
-		  ))}
+		  {messages.map((msg, i) => {
+			const prev = messages[i - 1];
+
+			const sameSender = prev?.from === msg.from;
+			const prevTime = new Date(prev?.timestamp || 0);
+			const currentTime = new Date(msg.timestamp);
+
+			const sameMinute =
+			  prevTime.getHours() === currentTime.getHours() &&
+			  prevTime.getMinutes() === currentTime.getMinutes();
+
+			const showMeta = !(sameSender && sameMinute);
+
+			return (
+			  <BubbleUI
+				key={msg.id || i}
+				data={msg}
+				isSelf={msg.from === socketId}
+				isOwner={msg.role === "owner"}
+				showMeta={showMeta}
+			  />
+			);
+		  })}
 		</>
 	  );
-  });
+	});
+
 
   return (
     <Box p={0}>

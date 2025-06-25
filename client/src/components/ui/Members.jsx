@@ -13,6 +13,7 @@ import toast from "react-hot-toast"
 const Members = ({data, roomId, isOwner, currentUserId}) => {
   const usernameRef = useRef(null)
   const usernameInputRef = useRef(null)
+  const usernameCloseRef = useRef(null)
   
   const socket = useSocket()
   
@@ -24,7 +25,18 @@ const Members = ({data, roomId, isOwner, currentUserId}) => {
   
   
   const handleChangeName = () => {
-    socket.emit('changeName', { roomId, newName: usernameInputRef.current.value, targetSocketId: currentUserId })
+	const username = usernameInputRef.current.value
+	
+	if(!username || username==="") {
+		toast.error("Bir isim giriniz.")
+		return
+	}
+	if(username.length > 12){
+		toast.error("Sadece 12 harf")
+		return
+	}
+    socket.emit('changeName', { roomId, newName: username, targetSocketId: currentUserId })
+	usernameCloseRef.current.click()
   }
   return (
     <Stack gap="5">
@@ -71,11 +83,13 @@ const Members = ({data, roomId, isOwner, currentUserId}) => {
 			clickRef={usernameRef}
 			clickName="Değiştir"
 			onClick={()=> handleChangeName()}
+			closeRef={usernameCloseRef}
 		   >
 			<ModalInputUI
 				placeholder="Bir Kullanıcı Adı Giriniz."
 				label="Kullanıcı Adı"
 				ref={usernameInputRef}
+				onKeyDown={(e) => e.key === "Enter" && handleChangeName()}
 				
 			/>	
 		  </ModalUI>
