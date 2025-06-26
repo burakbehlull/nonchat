@@ -32,7 +32,7 @@ export default (io, socket) => {
   socket.on('joinRoom', ({ roomId, password }, callback) => {
     const room = rooms[roomId];
     if (!room) return callback({ success: false, message: 'Room not found.' });
-
+	
     if (room.banned.includes(userId)) {
       return callback({ success: false, message: 'You are banned.' });
     }
@@ -44,6 +44,9 @@ export default (io, socket) => {
     if (Object.keys(room.members).length >= room.limit) {
       return callback({ success: false, message: 'Room is full.' });
     }
+	
+	if (!room) return callback({ success: false, message: 'Room no longer exists.' });
+
 
     room.members[socket.id] = {
       userId,
@@ -159,6 +162,7 @@ export default (io, socket) => {
         io.to(roomId).emit('roomUsers', getUsers(roomId));
 
         if (Object.keys(room.members).length === 0) {
+          io.to(roomId).emit('roomClosed');
           delete rooms[roomId];
         }
       }

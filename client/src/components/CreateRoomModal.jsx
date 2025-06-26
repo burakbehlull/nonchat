@@ -48,6 +48,8 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                     type="text"
                     ref={roomNameRef}
                     required
+					onKeyDown={(e) => e.key === "Enter" && handleCreateRoom()}
+					
                 />
                 <ModalInputUI
                     placeholder="Şifre (opsiyonel)"
@@ -55,6 +57,7 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                     type="password"
                     ref={passwordRef}
                     required={false}
+					onKeyDown={(e) => e.key === "Enter" && handleCreateRoom()}
                 />
                 <Flex gap={4} align="center">
                     <TextUI 
@@ -71,6 +74,8 @@ export default function CreateRoomModal({ children, onCreate, clickName }) {
                         value={10}
                         min={0}
                         ref={limitRef}
+						onKeyDown={(e) => e.key === "Enter" && handleCreateRoom()}
+						
                         required={false}
                     />
                 </Flex>

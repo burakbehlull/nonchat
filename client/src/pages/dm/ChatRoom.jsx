@@ -44,15 +44,17 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		}
 
 		setInfo(res);
+		
 		setIsOwner(res.isOwner);
 		setCurrentUserId(socket.id);
-
+		setUsers(res.users);
+		
 		socket.emit("joinRoom", { roomId, password }, (joinRes) => {
 		  if (!joinRes.success) {
 			toast.error(joinRes.message || "Odaya katılamadın");
 			return navigate("/");
 		  }
-
+		  
 		  setJoinedRoom(true);
 		  if(res.isOwner){
 			toast.success("Oda oluşturuldu!");
@@ -86,6 +88,21 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 	  });
 
 	  return () => socket.off("bannedFromRoom");
+  }, [socket]);
+  
+  useEffect(() => {
+	  if (!socket) return;
+
+	  const handleRoomClosed = () => {
+		toast.error("Oda kapatıldı!");
+		navigate("/");
+	  };
+
+	  socket.on("roomClosed", handleRoomClosed);
+
+	  return () => {
+		socket.off("roomClosed", handleRoomClosed);
+	  };
   }, [socket]);
 
 
