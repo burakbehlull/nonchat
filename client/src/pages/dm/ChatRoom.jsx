@@ -224,7 +224,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
               {isMobile && (
                 <Box display="flex" gap={4} mt={1}>
                   <DrawerUI title="Katılımcılar" content={<Icon as={FaUsers} />}>
-                    <Members data={users} isOwner={isOwner} currentUserId={currentUserId} />
+                    <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
                   </DrawerUI>
 				  {isOwner && <GroupSettings />}
 					  
