@@ -140,7 +140,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
       content={
         <Icon 
           size="md" 
-          color="gray.800" 
+          color={{ base: "gray.800", _dark: "gray.400" }} 
           cursor="pointer"
           aria-label="Oda Ayarları"
           alt="Oda Ayarları"
@@ -223,7 +223,17 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
               <TextUI text={info?.name || roomId || "Oda"} isTruncated />
               {isMobile && (
                 <Box display="flex" gap={4} mt={1}>
-                  <DrawerUI title="Katılımcılar" content={<Icon as={FaUsers} />}>
+                  <DrawerUI title="Katılımcılar" content={ 
+						<Icon 
+						  size="md" 
+						  color={{ base: "gray.800", _dark: "gray.400" }} 
+						  cursor="pointer"
+						  aria-label="Katılımcılar"
+						  alt="Katılımcılar"
+						>
+						  <FaUsers />
+						</Icon>
+		}>
                     <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
                   </DrawerUI>
 				  {isOwner && <GroupSettings />}
