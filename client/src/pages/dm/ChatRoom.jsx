@@ -1,9 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
 import { InputUI, BubbleUI, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
 import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend } from "@icons";
-import { Darkmode } from "@components";
+import { Darkmode, EmojiPicker } from "@components";
 import { useSocket } from "@services";
 import toast from "react-hot-toast";
 
@@ -138,7 +138,13 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
     <ModalUI
       modalTitle="Oda Ayarları"
       content={
-        <Icon size="md" color="gray.800" cursor="pointer">
+        <Icon 
+          size="md" 
+          color="gray.800" 
+          cursor="pointer"
+          aria-label="Oda Ayarları"
+          alt="Oda Ayarları"
+        >
           <FaUsersGear />
         </Icon>
       }
@@ -150,14 +156,14 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         label="Grup Başlığı"
         ref={groupTitleRef}
         type="text"
-		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
+		    onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
 		
       />
       <Flex gap={4} align="center">
         <TextUI text="Limit" fontWeight="medium" textStyle="md" />
         <NumberInputUI icon={<HiOutlineUsers />}
-		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
-		value={info?.limit || 10} min={0} ref={groupLimitRef} />
+          onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
+          value={info?.limit || 10} min={0} ref={groupLimitRef} />
       </Flex>
     </ModalUI>
   );
@@ -243,9 +249,21 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 endElement={
-                  <Icon size="md" cursor="pointer" onClick={sendMessage}>
-                    <FiSend />
-                  </Icon>
+                  <Flex align="center" gap={2}>
+                    <EmojiPicker
+                      theme="dark"
+                      onEmojiSelect={(emoji) => setInput((prev) => prev + emoji)}
+                    />
+                    <Icon 
+                      size="md" 
+                      cursor="pointer" 
+                      aria-label="Mesaj Gönder"
+                      alt="Mesaj Gönder"
+                      onClick={sendMessage}
+                    >
+                      <FiSend />
+                    </Icon>
+                  </Flex>
                 }
                 onKeyDown={(e) => e.key === "Enter" && sendMessage()}
               />
