@@ -29,6 +29,8 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   const modalRef = useRef(null);
   const groupTitleRef = useRef(null);
   const groupLimitRef = useRef(null);
+  const groupPasswordRef = useRef(null);
+  
   const scrollRef = useRef(null);
   
    useEffect(() => {
@@ -51,6 +53,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		}
 
 		setInfo(res);
+		console.log(res)
 		
 		setIsOwner(res.isOwner);
 		setCurrentUserId(socket.id);
@@ -135,12 +138,14 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   
   const handleRoomSettingChange = ()=>{
 	  const newName = groupTitleRef.current.value
+	  const newPassword = groupPasswordRef.current.value
+	  
 	  if(newName.length > 12){
 		toast.error("Sadece 12 harf", { duration: 2000, id: "room-settings" })
 		return
 	  }
 	  const newLimit = Number(groupLimitRef.current.value)
-	  socket.emit("updateRoom", { roomId, name: newName, limit: newLimit,}, (res) => {
+	  socket.emit("updateRoom", { roomId, name: newName, limit: newLimit, password: newPassword}, (res) => {
 		if (res.success) {
 		  toast.success("Oda ayarları güncellendi!", { duration: 2000, id: "room-settings" });
 		  setInfo(res.room);
@@ -172,14 +177,22 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         label="Grup Başlığı"
         ref={groupTitleRef}
         type="text"
-		    onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
+		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
 		
+      />
+	  <ModalInputUI
+        placeholder="Yeni parola giriniz"
+        label="Parola"
+        ref={groupPasswordRef}
+        type="password"
+		onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
       />
       <Flex gap={4} align="center">
         <TextUI text="Limit" fontWeight="medium" textStyle="md" />
         <NumberInputUI icon={<HiOutlineUsers />}
           onKeyDown={(e) => e.key === "Enter" && handleRoomSettingChange()}
-          value={info?.limit || 10} min={0} ref={groupLimitRef} />
+          value={info?.limit || 10} min={0} ref={groupLimitRef} 
+		/>
       </Flex>
     </ModalUI>
   );

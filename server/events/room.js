@@ -89,15 +89,25 @@ export default (io, socket) => {
     io.to(roomId).emit('roomUsers', getUsers(roomId));
   });
 
-  socket.on('updateRoom', ({ roomId, name, limit }, callback) => {
+  socket.on('updateRoom', ({ roomId, name, limit, password }, callback) => {
     const room = rooms[roomId];
     if (!room) return callback({ success: false });
     if (room.ownerId !== socket.id) return callback({ success: false, message: 'Not authorized.' });
 
     room.name = name || room.name;
     room.limit = limit || room.limit;
+   
+    if (password === "" || password === null) {
+		room.password = null;
+	} else if (typeof password === 'string') {
+		room.password = password;
+	}
 
-    callback({ success: true, room });
+    callback({ success: true,  room: {
+      ...room,
+		passwordProtected: !!room.password
+	  }	
+	});
   });
 
   socket.on("kickUser", ({ roomId, targetSocketId }, callback) => {
