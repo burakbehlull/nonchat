@@ -14,18 +14,17 @@ export default function RoomPasswordModal({ children, clickName, data, clickRef 
 	const closeRef = useRef(null);
 	
 	const handlePasswordSubmit = () => {
-		
-	socket.emit("joinRoom", { roomId: data, password: passwordRef.current.value }, ({ success, message }) => {
-		if(!passwordRef.current.value) return toast("Şifre giriniz!")
-		if (success) {
-			closeRef.current.click();
-			navigate(`/channel/${data}`, { state: { data: passwordRef.current.value } })
-			
-			
-		} else {
-			toast(`Şifre yanlış`);
-		}
-	  });
+		socket.emit("joinRoom", { roomId: data, password: passwordRef.current.value }, ({ success, message }) => {
+			if(!passwordRef.current.value) return toast("Şifre giriniz!", {id: "enter-password"})
+			if (success) {
+				closeRef.current.click();
+				navigate(`/channel/${data}`, { state: { data: passwordRef.current.value } })
+				
+				
+			} else {
+				toast(`Şifre yanlış`, { id: "enter-password" });
+			}
+		});
 	}
 
     return (

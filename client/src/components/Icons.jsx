@@ -3,7 +3,7 @@ import { FaUsersGear } from "react-icons/fa6";
 import { FaUsers } from "react-icons/fa";
 import { FiSend } from "react-icons/fi";
 
-import { RiEmojiStickerLine } from "react-icons/ri";
+import { RiEmojiStickerLine, RiGroup2Fill } from "react-icons/ri";
 
 import { HiChatAlt2, HiUsers, HiAtSymbol, HiStar } from "react-icons/hi";
 import { HiOutlineUsers } from "react-icons/hi2";
@@ -45,5 +45,7 @@ export {
 	BsThreeDotsVertical,
 	LuArrowRightLeft,
 	TbCrown,
-	RiEmojiStickerLine
+	
+	RiEmojiStickerLine,
+	RiGroup2Fill
 }

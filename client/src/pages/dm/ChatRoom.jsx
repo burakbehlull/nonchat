@@ -1,11 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
-import { InputUI, BubbleUI, Members, DrawerUI, ModalInputUI, ModalUI, NumberInputUI, TextUI } from "@ui";
-import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend } from "@icons";
+import toast from "react-hot-toast";
+
+import { InputUI, BubbleUI, Members, DrawerUI, ModalInputUI, 
+	ModalUI, NumberInputUI, TextUI } from "@ui";
+import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend, RiGroup2Fill } from "@icons";
 import { Darkmode, EmojiPicker } from "@components";
 import { useSocket } from "@services";
-import toast from "react-hot-toast";
+
+
 
 export default function ChatRoom({ roomId: propRoomId, password }) {
   const { roomId: urlRoomId } = useParams();
@@ -39,7 +43,10 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 
 	  socket.emit("getRoomInfo", { roomId }, (res) => {
 		if (!res.success) {
-		  toast.error(res.message || "Oda bulunamadı");
+		  toast.error(res.message || "Oda bulunamadı", {
+			  duration: 4000,
+			  id: "join-room"
+		  });
 		  return navigate("/");
 		}
 
@@ -51,15 +58,24 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		
 		socket.emit("joinRoom", { roomId, password }, (joinRes) => {
 		  if (!joinRes.success) {
-			toast.error(joinRes.message || "Odaya katılamadın");
+			toast.error(joinRes.message || "Odaya katılamadın", {
+				duration: 4000,
+				id: "join-room"
+			});
 			return navigate("/");
 		  }
 		  
 		  setJoinedRoom(true);
 		  if(res.isOwner){
-			toast.success("Oda oluşturuldu!");
+			toast.success("Oda oluşturuldu!", {
+				 duration: 2000,
+				 id: "join-room"
+			});
 		  } else {
-			toast.success("Odaya katıldın!"); 
+			toast.success("Odaya katıldın!", {
+				 duration: 2000,
+				 id: "join-room"
+			}); 
 		  }
 		});
 	  });
@@ -83,7 +99,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
    
    useEffect(() => {
 	  socket.on("bannedFromRoom", ({ roomId }) => {
-		toast.error("Bu odadan banlandınız!");
+		toast.error("Bu odadan banlandınız!", { id: "banned" });
 		navigate("/")
 	  });
 
@@ -94,7 +110,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 	  if (!socket) return;
 
 	  const handleRoomClosed = () => {
-		toast.error("Oda kapatıldı!");
+		toast.error("Oda kapatıldı!", { id: "room-closed" });
 		navigate("/");
 	  };
 
@@ -112,7 +128,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		if (res?.success) {
 		  setInput("");
 		} else {
-		  toast.error("Mesaj gönderilemedi");
+		  toast.error("Mesaj gönderilemedi", { duration: 2000, id: "message" });
 		}
 	  });
   };
@@ -120,16 +136,16 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   const handleRoomSettingChange = ()=>{
 	  const newName = groupTitleRef.current.value
 	  if(newName.length > 12){
-		toast.error("Sadece 12 harf")
+		toast.error("Sadece 12 harf", { duration: 2000, id: "room-settings" })
 		return
 	  }
 	  const newLimit = Number(groupLimitRef.current.value)
 	  socket.emit("updateRoom", { roomId, name: newName, limit: newLimit,}, (res) => {
 		if (res.success) {
-		  toast.success("Oda ayarları güncellendi!");
+		  toast.success("Oda ayarları güncellendi!", { duration: 2000, id: "room-settings" });
 		  setInfo(res.room);
 		} else {
-		  toast.error(res.message || "Güncelleme başarısız!");
+		  toast.error(res.message || "Güncelleme başarısız!", { duration: 2000, id: "room-settings" });
 		}
 	  });
   }
@@ -140,7 +156,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
       content={
         <Icon 
           size="md" 
-          color={{ base: "gray.800", _dark: "gray.400" }} 
+          color={{ base: "gray.800", _dark: "gray.300" }} 
           cursor="pointer"
           aria-label="Oda Ayarları"
           alt="Oda Ayarları"
@@ -203,8 +219,11 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
     <Box p={0}>
       <Flex direction={{ base: "column", md: "row" }} height="100vh" overflow="hidden">
         {!isMobile && (
-          <Flex direction="column" width="290px" borderRight="1px solid #e4e4e7" flexShrink={0}>
-            <Box borderBottom="1px solid #e4e4e7" p="18px">
+          <Flex direction="column" width="290px" borderRight={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }}  flexShrink={0}>
+            <Box 
+				borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} 
+				p="18px"
+			>
               <Flex gap={4} justify="space-between">
                 <Darkmode size="md" />
                 {isOwner && <GroupSettings />}
@@ -218,15 +237,23 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
         )}
 
         <Flex direction="column" flex="1" height={{ base: "auto", md: "97vh" }}>
-          <Box borderBottom="1px solid #e4e4e7" p={4} >
+          <Box borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} p={4} >
             <Flex justify={isMobile ? "space-around" : "normal"}>
-              <TextUI text={info?.name || roomId || "Oda"} isTruncated />
-              {isMobile && (
+			<Box display="flex">
+				<Icon size="lg"><RiGroup2Fill /></Icon>
+				<TextUI 
+					ml={2} 
+					text={info?.name || roomId || "Oda"} 
+					fontWeight="bold" 
+					isTruncated 
+				/>
+			</Box>
+			{isMobile && (
                 <Box display="flex" gap={4} mt={1}>
                   <DrawerUI title="Katılımcılar" content={ 
 						<Icon 
 						  size="md" 
-						  color={{ base: "gray.800", _dark: "gray.400" }} 
+						  color={{ base: "gray.800", _dark: "gray.300" }} 
 						  cursor="pointer"
 						  aria-label="Katılımcılar"
 						  alt="Katılımcılar"
@@ -259,7 +286,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 endElement={
-                  <Flex align="center" gap={2}>
+                  <Flex align="center" gap={3} mr={2}>
                     <EmojiPicker
                       theme="dark"
                       onEmojiSelect={(emoji) => setInput((prev) => prev + emoji)}

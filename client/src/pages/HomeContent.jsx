@@ -18,20 +18,28 @@ export default function HomeContent(){
 	const [inviteCode, setInviteCode] = useState("")
 	
 	const handleJoinClick = () => {
-	  if(!inviteCode || inviteCode==="") return toast.error("Lütfen davet kodunu giriniz.")
+	  if(!inviteCode || inviteCode==="") return toast.error("Lütfen davet kodunu giriniz.", {
+		  id: "invite-code"
+	  })
 	
 	  socket.emit("getRoomInfo", { roomId: inviteCode }, (res) => {
-		if (!res.success) return toast.error(`Oda yok`)
+		if (!res.success) return toast.error(`Oda yok`, {
+			id: "room-info"
+		})
 
 		if (res.isOwner || !res.passwordProtected) {
 
 		  socket.emit("joinRoom", { roomId: inviteCode }, ({ success, message }) => {
 			if (success) {
-			  toast.success("Giriş başarılı")
+			  toast.success("Giriş başarılı", {
+				  id: "is-join"
+			  })
 				
 			  navigate(`/channel/${inviteCode}`);
 			} else {
-			  toast.error(`Katılamadı: ${message}`)
+			  toast.error(`Katılamadı: ${message}`, {
+				  id: "is-join"
+			  })
 			}
 		  });
 		} else {
