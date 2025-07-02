@@ -15,6 +15,8 @@ import { Icon } from "@chakra-ui/react";
 
 import { TbCrown } from "react-icons/tb";
 
+import { AiOutlineDisconnect } from "react-icons/ai";
+
 function IconUI({children, color, size,  ...props}) {
 	return (
 		<Icon 
@@ -47,5 +49,7 @@ export {
 	TbCrown,
 	
 	RiEmojiStickerLine,
-	RiGroup2Fill
+	RiGroup2Fill,
+	
+	AiOutlineDisconnect
 }

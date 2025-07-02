@@ -5,7 +5,8 @@ import toast from "react-hot-toast";
 
 import { InputUI, BubbleUI, Members, DrawerUI, ModalInputUI, 
 	ModalUI, NumberInputUI, TextUI } from "@ui";
-import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend, RiGroup2Fill } from "@icons";
+import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend, 
+	RiGroup2Fill, AiOutlineDisconnect } from "@icons";
 import { Darkmode, EmojiPicker } from "@components";
 import { useSocket } from "@services";
 
@@ -33,12 +34,11 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   
   const scrollRef = useRef(null);
   
-   useEffect(() => {
+  useEffect(() => {
 	  if (scrollRef.current) {
 		scrollRef.current.scrollIntoView({ behavior: "smooth" });
 	  }
    }, [messages]);
-
 
   useEffect(() => {
 	  if (!roomId || !socket) return;
@@ -83,8 +83,6 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 	  });
   }, [roomId, socket]);
 
-  
-
   useEffect(() => {
 	  if (!joinedRoom || !socket) return;
 
@@ -99,7 +97,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 	  };
    }, [joinedRoom, socket]);
    
-   useEffect(() => {
+  useEffect(() => {
 	  socket.on("bannedFromRoom", ({ roomId }) => {
 		toast.error("Bu odadan banlandınız!", { id: "banned" });
 		navigate("/")
@@ -122,7 +120,6 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		socket.off("roomClosed", handleRoomClosed);
 	  };
   }, [socket]);
-
 
   const sendMessage = () => {
 	  if (!input.trim()) return;
@@ -153,6 +150,14 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		}
 	  });
   }
+
+  const handleLeave = () => {
+    socket.emit("leaveRoom", { roomId });
+	toast.success("Odadan çıkış yapıldı!", {
+		duration: 3000, id: "room-closed"
+	})
+    navigate("/");
+  };
 
   const GroupSettings = () => (
     <ModalUI
@@ -225,6 +230,20 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		</>
 	  );
 	});
+	
+	
+  function DisconnectButton(){
+	 return <Icon 
+				onClick={handleLeave}
+				size="md" 
+				color={{ base: "gray.800", _dark: "gray.300" }} 
+				cursor="pointer" 
+				aria-label="Odadan Çık" 
+				alt="Odadan Çık" 
+			>
+				<AiOutlineDisconnect />
+			</Icon>
+  }
 
 
   return (
@@ -238,6 +257,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 			>
               <Flex gap={4} justify="space-between">
                 <Darkmode size="md" />
+				<DisconnectButton />
                 {isOwner && <GroupSettings />}
               </Flex>
             </Box>
@@ -278,6 +298,7 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 				  {isOwner && <GroupSettings />}
 					  
                   <Darkmode size="md" />
+				  <DisconnectButton />
                 </Box>
               )}
             </Flex>
