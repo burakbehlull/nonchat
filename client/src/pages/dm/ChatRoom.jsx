@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Helmet from "react-helmet";
 import { Box, Flex, useBreakpointValue, Icon } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 
@@ -260,110 +261,116 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   }
   
   return (
-    <Box p={0}>
-      <Flex direction={{ base: "column", md: "row" }} height="100vh" overflow="hidden">
-        {!isMobile && (
-          <Flex direction="column" width="290px" borderRight={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }}  flexShrink={0}>
-            <Box 
-				borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} 
-				p="18px"
-			>
-              <Flex gap={4} justify="space-between">
-                <Darkmode size="md" />
-				<DisconnectButton />
-                {isOwner && <GroupSettings />}
-              </Flex>
-            </Box>
-            <Box flex="1" p={4} overflowY="auto">
-              <TextUI text="Kullanıcılar" fontWeight="medium" textStyle="md" mb={4} />
-              <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
-            </Box>
-          </Flex>
-        )}
-
-        <Flex direction="column" flex="1" height={{ base: "auto", md: "97vh" }}>
-          <Box borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} p={4} >
-            <Flex justify={isMobile ? "space-around" : "normal"}>
-			<Box display="flex">
-				<Icon size="lg"><RiGroup2Fill /></Icon>
-				<TextUI 
-					ml={2}
-					mr={1}
-					text={`${info?.name || roomId}`}
-					onClick={copyHandle}
-					cursor="pointer"
-					fontWeight="bold" 
-					isTruncated 
-					
-				/>
-				{/*<Icon size="sm" mt={1}
-					onClick={copyHandle}
-					cursor="pointer"
+	  <>
+		<Helmet>
+			<title>None Chat | {info?.name || roomId}</title>
+			<meta name="description" content={`Sohbet ve eğlence odası. Linke tıklayarak ${info?.name || roomId} adlı odaya katılabilirsin.`}  />
+		</Helmet>
+		<Box p={0}>
+		  <Flex direction={{ base: "column", md: "row" }} height="100vh" overflow="hidden">
+			{!isMobile && (
+			  <Flex direction="column" width="290px" borderRight={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }}  flexShrink={0}>
+				<Box 
+					borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} 
+					p="18px"
 				>
-				{copyLinkShower ? <LuCopyCheck /> : <LuCopy />}
-				</Icon>
-				*/}
-			</Box>
-			{isMobile && (
-                <Box display="flex" gap={4} mt={1}>
-                  <DrawerUI title="Katılımcılar" content={ 
+				  <Flex gap={4} justify="space-between">
+					<Darkmode size="md" />
+					<DisconnectButton />
+					{isOwner && <GroupSettings />}
+				  </Flex>
+				</Box>
+				<Box flex="1" p={4} overflowY="auto">
+				  <TextUI text="Kullanıcılar" fontWeight="medium" textStyle="md" mb={4} />
+				  <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
+				</Box>
+			  </Flex>
+			)}
+
+			<Flex direction="column" flex="1" height={{ base: "auto", md: "97vh" }}>
+			  <Box borderBottom={{ base: "1px solid #e4e4e7", _dark: "1px solid #27272a" }} p={4} >
+				<Flex justify={isMobile ? "space-around" : "normal"}>
+				<Box display="flex">
+					<Icon size="lg"><RiGroup2Fill /></Icon>
+					<TextUI 
+						ml={2}
+						mr={1}
+						text={`${info?.name || roomId}`}
+						onClick={copyHandle}
+						cursor="pointer"
+						fontWeight="bold" 
+						isTruncated 
+						
+					/>
+					{/*<Icon size="sm" mt={1}
+						onClick={copyHandle}
+						cursor="pointer"
+					>
+					{copyLinkShower ? <LuCopyCheck /> : <LuCopy />}
+					</Icon>
+					*/}
+				</Box>
+				{isMobile && (
+					<Box display="flex" gap={4} mt={1}>
+					  <DrawerUI title="Katılımcılar" content={ 
+							<Icon 
+							  size="md" 
+							  color={{ base: "gray.800", _dark: "gray.300" }} 
+							  cursor="pointer"
+							  aria-label="Katılımcılar"
+							  alt="Katılımcılar"
+							>
+							  <FaUsers />
+							</Icon>
+			}>
+						<Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
+					  </DrawerUI>
+					  {isOwner && <GroupSettings />}
+					  <DisconnectButton />
+					  <Darkmode size="md" />
+					</Box>
+				  )}
+				</Flex>
+			  </Box>
+
+			  <Box flex="1" position="relative" overflow="hidden">
+				<Box position="absolute" top="0" left="0" right="0" bottom="80px" overflowY="auto" pt={5} px={5}>
+				   <MessageList messages={messages} socketId={socket.id} />
+				   <div ref={scrollRef} />
+				</Box>
+
+				<Box position="absolute" bottom="0" left="0" right="0" pt={5} px={4} pb={{ base: 4, md: 1 }}>
+				  <InputUI
+					placeholder="Mesaj gönder"
+					size="lg"
+					borderRadius={15}
+					type="text"
+					value={input}
+					onChange={(e) => setInput(e.target.value)}
+					endElement={
+					  <Flex align="center" gap={3} mr={2}>
+						<EmojiPicker
+						  theme="dark"
+						  onEmojiSelect={(emoji) => setInput((prev) => prev + emoji)}
+						/>
 						<Icon 
 						  size="md" 
-						  color={{ base: "gray.800", _dark: "gray.300" }} 
-						  cursor="pointer"
-						  aria-label="Katılımcılar"
-						  alt="Katılımcılar"
+						  cursor="pointer" 
+						  aria-label="Mesaj Gönder"
+						  alt="Mesaj Gönder"
+						  onClick={sendMessage}
 						>
-						  <FaUsers />
+						  <FiSend />
 						</Icon>
-		}>
-                    <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
-                  </DrawerUI>
-				  {isOwner && <GroupSettings />}
-				  <DisconnectButton />
-				  <Darkmode size="md" />
-                </Box>
-              )}
-            </Flex>
-          </Box>
-
-          <Box flex="1" position="relative" overflow="hidden">
-            <Box position="absolute" top="0" left="0" right="0" bottom="80px" overflowY="auto" pt={5} px={5}>
-               <MessageList messages={messages} socketId={socket.id} />
-			   <div ref={scrollRef} />
-            </Box>
-
-            <Box position="absolute" bottom="0" left="0" right="0" pt={5} px={4} pb={{ base: 4, md: 1 }}>
-              <InputUI
-                placeholder="Mesaj gönder"
-                size="lg"
-                borderRadius={15}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                endElement={
-                  <Flex align="center" gap={3} mr={2}>
-                    <EmojiPicker
-                      theme="dark"
-                      onEmojiSelect={(emoji) => setInput((prev) => prev + emoji)}
-                    />
-                    <Icon 
-                      size="md" 
-                      cursor="pointer" 
-                      aria-label="Mesaj Gönder"
-                      alt="Mesaj Gönder"
-                      onClick={sendMessage}
-                    >
-                      <FiSend />
-                    </Icon>
-                  </Flex>
-                }
-                onKeyDown={(e) => e.key === "Enter" && sendMessage()}
-              />
-            </Box>
-          </Box>
-        </Flex>
-      </Flex>
-    </Box>
+					  </Flex>
+					}
+					onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+				  />
+				</Box>
+			  </Box>
+			</Flex>
+		  </Flex>
+		</Box>
+	</>
   );
 }
