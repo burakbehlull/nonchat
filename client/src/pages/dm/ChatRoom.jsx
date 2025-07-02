@@ -53,7 +53,6 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 		}
 
 		setInfo(res);
-		console.log(res)
 		
 		setIsOwner(res.isOwner);
 		setCurrentUserId(socket.id);

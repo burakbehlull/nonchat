@@ -154,6 +154,21 @@ export default (io, socket) => {
     callback?.({ success: true });
   });
 
+  socket.on("leaveRoom", ({ roomId }) => {
+	  const room = rooms[roomId];
+	  if (room?.members[socket.id]) {
+		delete room.members[socket.id];
+		socket.leave(roomId);
+		io.to(roomId).emit("roomUsers", getUsers(roomId));
+
+		if (Object.keys(room.members).length === 0) {
+		  io.to(roomId).emit("roomClosed");
+		  delete rooms[roomId];
+		}
+	  }
+   });
+
+
   function getUsers(roomId) {
     const room = rooms[roomId];
     if (!room) return [];
