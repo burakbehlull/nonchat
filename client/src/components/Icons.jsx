@@ -17,7 +17,7 @@ import { TbCrown } from "react-icons/tb";
 
 import { AiOutlineDisconnect } from "react-icons/ai";
 
-function IconUI({children, color, size,  ...props}) {
+function IconUI({children, color, size, ...props}) {
 	return (
 		<Icon 
 			size={size || "sm"}

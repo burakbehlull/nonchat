@@ -10,8 +10,6 @@ import { FaUsersGear, FaUsers, HiOutlineUsers, FiSend,
 import { Darkmode, EmojiPicker } from "@components";
 import { useSocket } from "@services";
 
-
-
 export default function ChatRoom({ roomId: propRoomId, password }) {
   const { roomId: urlRoomId } = useParams();
   const roomId = propRoomId || urlRoomId;
@@ -246,6 +244,21 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
   }
 
 
+
+  function copyHandle(){
+	// const link = window.location.href;
+	
+    navigator.clipboard.writeText(roomId)
+      .then(() => {
+        toast.success("Link kopyalandı!", { duration: 1000, id: "copy-link" });
+		// setCopyLinkShower(true)
+		// setTimeout(() => setCopyLinkShower(false), 2000)
+      })
+      .catch(() => {
+        toast.error("Kopyalama başarısız.", { duration: 1000, id: "copy-link" });
+    })
+  }
+  
   return (
     <Box p={0}>
       <Flex direction={{ base: "column", md: "row" }} height="100vh" overflow="hidden">
@@ -274,11 +287,22 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
 			<Box display="flex">
 				<Icon size="lg"><RiGroup2Fill /></Icon>
 				<TextUI 
-					ml={2} 
-					text={info?.name || roomId || "Oda"} 
+					ml={2}
+					mr={1}
+					text={`${info?.name || roomId}`}
+					onClick={copyHandle}
+					cursor="pointer"
 					fontWeight="bold" 
 					isTruncated 
+					
 				/>
+				{/*<Icon size="sm" mt={1}
+					onClick={copyHandle}
+					cursor="pointer"
+				>
+				{copyLinkShower ? <LuCopyCheck /> : <LuCopy />}
+				</Icon>
+				*/}
 			</Box>
 			{isMobile && (
                 <Box display="flex" gap={4} mt={1}>
@@ -296,9 +320,8 @@ export default function ChatRoom({ roomId: propRoomId, password }) {
                     <Members data={users} roomId={roomId} isOwner={isOwner} currentUserId={currentUserId} />
                   </DrawerUI>
 				  {isOwner && <GroupSettings />}
-					  
-                  <Darkmode size="md" />
 				  <DisconnectButton />
+				  <Darkmode size="md" />
                 </Box>
               )}
             </Flex>
