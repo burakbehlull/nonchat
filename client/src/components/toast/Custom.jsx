@@ -1,15 +1,18 @@
+import { toast } from "react-hot-toast"
+import { Box, Text, IconButton } from "@chakra-ui/react"
+
 function CustomToastDesignChakra({ message, icon, t }) {
   return (
     <Box
-      bg="white.500"
-      color="white"
+      bg="white"
+      color="black"
       p={3}
       borderRadius="md"
       shadow="md"
       display="flex"
       alignItems="center"
       justifyContent="space-between"
-      width="300px"
+      width="250px"
 	  onClick={() => toast.dismiss(t.id)}
     >
       <Text>{icon} {message}</Text>
@@ -25,10 +28,10 @@ function CustomToastDesignChakra({ message, icon, t }) {
   );
 }
 
-function showCustomToast(message, icon = "✅"){
+export function showToast(message, icon = "✅", duration, id){
 	toast.custom((t) => (
-		<CustomToastDesignChakra t={t} icon={icon} message={message} {...props} />
+		<CustomToastDesignChakra t={t} icon={icon} message={message} />
 	), {
-		duration: 3000, ...props
+		duration: duration ||3000, id
 	});
 };

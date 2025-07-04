@@ -25,6 +25,7 @@ export default defineConfig({
       '@http': way('src/components/http/index'),
       '@ui': way('src/components/ui/index'),
       '@icons': way('src/components/Icons'),
+	  '@custom/toast': way('src/components/toast/custom.jsx')
     }
   },
 })
