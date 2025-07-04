@@ -19,7 +19,7 @@ const Members = ({data, roomId, isOwner, currentUserId}) => {
   
   const handleBan = (targetSocketId) => {
 	 socket.emit('kickUser', { roomId, targetSocketId }, (response) => {
-		toast.error("Kullanıcı banlandı!", { duration: 2000 })
+		toast.error("Kullanıcı banlandı!", { duration: 2000, id: "user-kicked" })
      })
   }
   
@@ -28,11 +28,11 @@ const Members = ({data, roomId, isOwner, currentUserId}) => {
 	const username = usernameInputRef.current.value
 	
 	if(!username || username==="") {
-		toast.error("Bir isim giriniz.", { duration: 2000 })
+		toast.error("Bir isim giriniz.", { duration: 2000, id: "name-toast" })
 		return
 	}
 	if(username.length > 12){
-		toast.error("Sadece 12 harf", { duration: 2000 })
+		toast.error("Sadece 12 harf", { duration: 2000, id: "name-toast" })
 		return
 	}
     socket.emit('changeName', { roomId, newName: username, targetSocketId: currentUserId })

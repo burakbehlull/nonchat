@@ -14,6 +14,7 @@ import { useSocket } from "@services";
 export default function ChatRoom({ roomId: propRoomId, password }) {
   const { roomId: urlRoomId } = useParams();
   const roomId = propRoomId || urlRoomId;
+  
   const socket = useSocket();
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, sm: false });

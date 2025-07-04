@@ -46,7 +46,6 @@ const Bubble = React.memo(({ data, isSelf, isOwner, showMeta }) => {
 			</Text>
 		  </Stack>
 		</HStack>
-
     </Stack>
   );
 });
